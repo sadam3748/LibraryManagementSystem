@@ -40,8 +40,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Admin/CreateMember.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXRlTWVtYmVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Admin/Dashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Admin/Members.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cTWVtYmVycy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Book/Create.cshtml]
@@ -76,8 +84,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5kZXhfb2xkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Member/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXERhc2hib2FyZC5jc2h0bWw=
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Member/Dashboard_member.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXERhc2hib2FyZF9tZW1iZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Reports/Index.cshtml]

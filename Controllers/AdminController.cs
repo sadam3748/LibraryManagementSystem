@@ -78,5 +78,22 @@ namespace LibraryManagementSystem.Controllers
 
             return View(model);
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Members()
+        {
+            var members = await _userManager.GetUsersInRoleAsync("Member");
+
+            var model = members.Select(user => new AdminMemberViewModel
+            {
+                Id = user.Id,
+                FullName = user.FullName,
+                Email = user.Email ?? "",
+                UserName = user.UserName ?? ""
+            }).ToList();
+
+            return View(model);
+        }
     }
 }

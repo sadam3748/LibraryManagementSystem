@@ -1,0 +1,136 @@
+﻿@model LibraryManagementSystem.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Create Member";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@* {{!-- Page Header --}} *@
+<div class="page-header">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-person-plus-fill me-2" style="color:var(--gold-light);"></i>Create Member
+                </h1>
+                <p class="page-subtitle">Add a new library member account with login access</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">Create Member</li>
+                    </ol>
+                </nav>
+            </div>
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-lms-outline">
+                <i class="bi bi-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-wrap">
+    <div class="container" style="max-width: 640px;">
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="lms-alert-success mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>@TempData["SuccessMessage"]</span>
+            </div>
+        }
+
+        <div class="lms-form-section">
+
+           @*  {{!-- Form Header --}} *@
+            <div class="lms-form-header">
+                <i class="bi bi-person-vcard-fill"></i>
+                <div>
+                    <h4>New Member Account</h4>
+                    <p>Member will be able to login, browse, and borrow books</p>
+                </div>
+            </div>
+
+           @*  {{!-- Form Body --}} *@
+            <div class="lms-form-body">
+
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <form asp-controller="Admin" asp-action="CreateMember" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    <p class="form-section-label">
+                        <i class="bi bi-person me-1"></i>Member Details
+                    </p>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label">
+                            <i class="bi bi-person me-1 text-green"></i>Full Name
+                        </label>
+                        <input asp-for="FullName"
+                               class="form-control"
+                               placeholder="e.g. Jane Smith" />
+                        <span asp-validation-for="FullName" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">
+                            <i class="bi bi-envelope me-1 text-green"></i>Email Address
+                        </label>
+                        <input asp-for="Email"
+                               class="form-control"
+                               placeholder="member@example.com"
+                               autocomplete="off" />
+                        <span asp-validation-for="Email" class="field-validation-error"></span>
+                    </div>
+
+                    <p class="form-section-label mt-4">
+                        <i class="bi bi-lock me-1"></i>Set Password
+                    </p>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">
+                            <i class="bi bi-lock me-1 text-green"></i>Password
+                        </label>
+                        <input asp-for="Password"
+                               class="form-control"
+                               placeholder="••••••••"
+                               autocomplete="new-password" />
+                        <span asp-validation-for="Password" class="field-validation-error"></span>
+                        <div class="mt-1" style="font-size:.77rem; color:var(--grey-500);">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Must include uppercase, number, and be at least 6 characters. Example: <strong>Member123!</strong>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="form-label">
+                            <i class="bi bi-lock-fill me-1 text-green"></i>Confirm Password
+                        </label>
+                        <input asp-for="ConfirmPassword"
+                               class="form-control"
+                               placeholder="••••••••"
+                               autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="d-flex gap-2 flex-wrap">
+                        <button type="submit" class="btn btn-lms-primary">
+                            <i class="bi bi-person-check-fill"></i> Create Member
+                        </button>
+                        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-lms-outline">
+                            <i class="bi bi-x-lg"></i> Cancel
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
