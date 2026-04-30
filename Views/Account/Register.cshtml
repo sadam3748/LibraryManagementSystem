@@ -1,0 +1,95 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Create Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="auth-wrap">
+    <div class="container">
+        <div class="auth-card" style="max-width:470px;">
+
+      @*       {{!-- Header --}} *@
+            <div class="auth-card-head">
+                <i class="bi bi-person-plus-fill"></i>
+                <h2>Create Account</h2>
+                <p>Join the Library Management System</p>
+            </div>
+
+          @*   {{!-- Body --}} *@
+            <div class="auth-card-body">
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="lms-alert-error mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <span>@TempData["Error"]</span>
+                    </div>
+                }
+
+                <div asp-validation-summary="All" class="validation-summary-errors"></div>
+
+                <form asp-controller="Account" asp-action="Register" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label">
+                            <i class="bi bi-person me-1 text-green"></i>Full Name
+                        </label>
+                        <input asp-for="FullName"
+                               class="form-control"
+                               placeholder="John Doe"
+                               autocomplete="name" />
+                        <span asp-validation-for="FullName" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">
+                            <i class="bi bi-envelope me-1 text-green"></i>Email Address
+                        </label>
+                        <input asp-for="Email"
+                               class="form-control"
+                               placeholder="you@example.com"
+                               autocomplete="email" />
+                        <span asp-validation-for="Email" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">
+                            <i class="bi bi-lock me-1 text-green"></i>Password
+                        </label>
+                        <input asp-for="Password"
+                               class="form-control"
+                               placeholder="••••••••"
+                               autocomplete="new-password" />
+                        <span asp-validation-for="Password" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="form-label">
+                            <i class="bi bi-lock-fill me-1 text-green"></i>Confirm Password
+                        </label>
+                        <input asp-for="ConfirmPassword"
+                               class="form-control"
+                               placeholder="••••••••"
+                               autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-lms-primary w-100 py-2">
+                        <i class="bi bi-person-check"></i> Create Account
+                    </button>
+                </form>
+
+                <div class="divider-line"></div>
+
+                <p class="text-center mb-0" style="font-size:.85rem; color:var(--grey-600);">
+                    Already have an account?
+                    <a asp-controller="Account" asp-action="Login" style="color:var(--green); font-weight:600;">
+                        Sign in
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

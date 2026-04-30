@@ -1,0 +1,175 @@
+@model LibraryManagementSystem.Models.Book
+@{
+    ViewData["Title"] = "Edit Book";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container-fluid px-4">
+        <h1 class="page-title"><i class="bi bi-pencil-square me-2"></i>Edit Book</h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a asp-controller="Book" asp-action="Index">Books</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a asp-controller="Book" asp-action="Details" asp-route-id="@Model.Id">
+                        @Model.Title
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">Edit</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
+
+            <form asp-controller="Book" asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <!-- Hidden primary key — required for Edit POST -->
+                <input type="hidden" asp-for="Id" />
+
+                <div class="lms-form-section">
+
+                    <!-- Form Header -->
+                    <div class="lms-form-header">
+                        <i class="bi bi-pencil-square"></i>
+                        <div>
+                            <h4>Edit Book</h4>
+                            <p>Update the information for <strong>@Model.Title</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="lms-form-body">
+
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                        <!-- Basic Information -->
+                        <div class="form-section-label">
+                            <i class="bi bi-info-circle me-2"></i>Basic Information
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label asp-for="Title" class="form-label">
+                                    Book Title <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Title" class="form-control"
+                                       placeholder="Enter full book title" />
+                                <span asp-validation-for="Title" class="field-validation-error"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label asp-for="ISBN" class="form-label">ISBN</label>
+                                <input asp-for="ISBN" class="form-control"
+                                       placeholder="978-XXXXXXXXXX" />
+                                <span asp-validation-for="ISBN" class="field-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-1">
+                            <div class="col-md-6">
+                                <label asp-for="Author" class="form-label">
+                                    Author <span class="text-danger">*</span>
+                                </label>
+                                <input asp-for="Author" class="form-control"
+                                       placeholder="Author full name" />
+                                <span asp-validation-for="Author" class="field-validation-error"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Genre" class="form-label">Genre</label>
+                                <input asp-for="Genre" class="form-control"
+                                       placeholder="e.g. Fiction" />
+                                <span asp-validation-for="Genre" class="field-validation-error"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="PublishedYear" class="form-label">Published Year</label>
+                                <input asp-for="PublishedYear" type="number" class="form-control"
+                                       placeholder="e.g. 2023"
+                                       min="1800" max="@DateTime.Now.Year" />
+                                <span asp-validation-for="PublishedYear" class="field-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mt-1">
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label">Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="4"
+                                          placeholder="Enter book description or summary..."></textarea>
+                                <span asp-validation-for="Description" class="field-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <!-- Publisher Details -->
+                        <div class="form-section-label mt-3">
+                            <i class="bi bi-building me-2"></i>Publisher Details
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Publisher" class="form-label">Publisher</label>
+                                <input asp-for="Publisher" class="form-control"
+                                       placeholder="Publisher name" />
+                                <span asp-validation-for="Publisher" class="field-validation-error"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Edition" class="form-label">Edition</label>
+                                <input asp-for="Edition" class="form-control"
+                                       placeholder="e.g. 3rd Edition" />
+                                <span asp-validation-for="Edition" class="field-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <!-- Availability -->
+                        <div class="form-section-label mt-3">
+                            <i class="bi bi-check2-circle me-2"></i>Availability
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="form-check form-switch mt-2">
+                                    <input asp-for="IsAvailable" class="form-check-input"
+                                           type="checkbox" role="switch" />
+                                    <label asp-for="IsAvailable" class="form-check-label"
+                                           style="font-size:.9rem;color:var(--grey-700);">
+                                        Mark as Available
+                                    </label>
+                                </div>
+                                <span asp-validation-for="IsAvailable" class="field-validation-error"></span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <hr class="divider-line mt-4" />
+                        <div class="d-flex gap-2 justify-content-end flex-wrap">
+                            <a asp-controller="Book" asp-action="Index"
+                               class="btn"
+                               style="border:1.5px solid var(--grey-300);color:var(--grey-700);padding:.48rem 1.1rem;">
+                                <i class="bi bi-x-lg me-1"></i>Cancel
+                            </a>
+                            <a asp-controller="Book" asp-action="Details" asp-route-id="@Model.Id"
+                               class="btn btn-lms-outline">
+                                <i class="bi bi-eye me-1"></i>View Details
+                            </a>
+                            <button type="submit" class="btn btn-lms-primary px-4">
+                                <i class="bi bi-check2-circle me-1"></i>Save Changes
+                            </button>
+                        </div>
+
+                    </div><!-- /lms-form-body -->
+                </div><!-- /lms-form-section -->
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

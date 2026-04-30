@@ -1,0 +1,82 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="auth-wrap">
+    <div class="container">
+        <div class="auth-card">
+@* 
+            Header  *@
+            <div class="auth-card-head">
+                <i class="bi bi-book-half"></i>
+                <h2>Welcome Back</h2>
+                <p>Sign in to your LibraSystem account</p>
+            </div>
+
+        @*     {{!-- Body --}} *@
+            <div class="auth-card-body">
+
+                @if (TempData["Error"] != null)
+                {
+                    <div class="lms-alert-error mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                        <span>@TempData["Error"]</span>
+                    </div>
+                }
+
+                <div asp-validation-summary="All" class="validation-summary-errors"></div>
+
+                <form asp-controller="Account" asp-action="Login" method="post" novalidate>
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">
+                            <i class="bi bi-envelope me-1 text-green"></i>Email Address
+                        </label>
+                        <input asp-for="Email"
+                               class="form-control"
+                               placeholder="you@example.com"
+                               autocomplete="email" />
+                        <span asp-validation-for="Email" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">
+                            <i class="bi bi-lock me-1 text-green"></i>Password
+                        </label>
+                        <input asp-for="Password"
+                               class="form-control"
+                               placeholder="••••••••"
+                               autocomplete="current-password" />
+                        <span asp-validation-for="Password" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                            <label asp-for="RememberMe" class="form-check-label" style="font-size:.84rem; color:var(--grey-600); text-transform:none; letter-spacing:0; font-weight:400;">
+                                Keep me signed in
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-lms-primary w-100 py-2">
+                        <i class="bi bi-box-arrow-in-right"></i> Sign In
+                    </button>
+                </form>
+
+                <div class="divider-line"></div>
+
+                <p class="text-center mb-0" style="font-size:.85rem; color:var(--grey-600);">
+                    Don't have an account?
+                    <a asp-controller="Account" asp-action="Register" style="color:var(--green); font-weight:600;">
+                        Create one
+                    </a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

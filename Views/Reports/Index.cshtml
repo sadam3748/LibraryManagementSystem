@@ -1,0 +1,428 @@
+@{
+    ViewData["Title"] = "Library Reports";
+    /*
+     * Optional ViewBag values your ReportsController can pass:
+     *   ViewBag.TotalBooks       (int)
+     *   ViewBag.TotalMembers     (int)
+     *   ViewBag.TotalBorrowings  (int)
+     *   ViewBag.OverdueCount     (int)
+     *   ViewBag.ReturnedCount    (int)
+     *   ViewBag.TopBooks         (IEnumerable<Book>)
+     *   ViewBag.RecentReturns    (IEnumerable<BorrowTransaction>)
+     * All cards fall back to placeholders if null.
+     */
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-bar-chart-line me-2"></i>Library Reports
+                </h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">Reports</li>
+                    </ol>
+                </nav>
+            </div>
+            <button class="btn d-none d-md-inline-flex"
+                    style="border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.32rem .9rem;"
+                    onclick="window.print()">
+                <i class="bi bi-printer me-1"></i>Print
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-4">
+
+    <!-- ── SUMMARY STATS ── -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-box navy">
+                <div class="stat-icon"><i class="bi bi-book-fill"></i></div>
+                <div class="stat-data">
+                    <div class="stat-number">@(ViewBag.TotalBooks ?? 0)</div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-box green">
+                <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+                <div class="stat-data">
+                    <div class="stat-number">@(ViewBag.TotalMembers ?? 0)</div>
+                    <div class="stat-label">Members</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-box info">
+                <div class="stat-icon"><i class="bi bi-arrow-left-right"></i></div>
+                <div class="stat-data">
+                    <div class="stat-number">@(ViewBag.TotalBorrowings ?? 0)</div>
+                    <div class="stat-label">All Borrowings</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-box green">
+                <div class="stat-icon"><i class="bi bi-arrow-return-left"></i></div>
+                <div class="stat-data">
+                    <div class="stat-number">@(ViewBag.ReturnedCount ?? 0)</div>
+                    <div class="stat-label">Returned</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-box danger">
+                <div class="stat-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                <div class="stat-data">
+                    <div class="stat-number">@(ViewBag.OverdueCount ?? 0)</div>
+                    <div class="stat-label">Overdue</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-xl-2">
+            <div class="stat-box gold">
+                <div class="stat-icon"><i class="bi bi-bookmark-check-fill"></i></div>
+                <div class="stat-data">
+                    <div class="stat-number">
+                        @((int)(ViewBag.TotalBorrowings ?? 0) - (int)(ViewBag.ReturnedCount ?? 0))
+                    </div>
+                    <div class="stat-label">Active Loans</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── REPORT CARDS ROW 1 ── -->
+    <div class="row g-3 mb-4">
+
+        <!-- Books Overview -->
+        <div class="col-md-6 col-xl-3">
+            <div class="report-card">
+                <div class="report-card-top">
+                    <div class="report-icon"
+                         style="background:rgba(26,39,68,.08);color:var(--navy);">
+                        <i class="bi bi-book-fill"></i>
+                    </div>
+                    <div>
+                        <div class="report-title">Books Overview</div>
+                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
+                            Catalog summary
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card-body">
+                    <div class="report-stat-row">
+                        <div class="report-mini">
+                            <div class="val">@(ViewBag.TotalBooks ?? 0)</div>
+                            <div class="lbl">Total</div>
+                        </div>
+                        <div class="report-mini">
+                            <div class="val" style="color:var(--success);">
+                                @((int)(ViewBag.TotalBooks ?? 0) - (int)(ViewBag.OverdueCount ?? 0))
+                            </div>
+                            <div class="lbl">Available</div>
+                        </div>
+                    </div>
+                    <a asp-controller="Book" asp-action="Index"
+                       class="btn btn-lms-outline btn-sm w-100 mt-2">
+                        <i class="bi bi-eye me-1"></i>View All Books
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Member Overview -->
+        <div class="col-md-6 col-xl-3">
+            <div class="report-card">
+                <div class="report-card-top">
+                    <div class="report-icon"
+                         style="background:var(--green-pale);color:var(--green);">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div>
+                        <div class="report-title">Member Overview</div>
+                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
+                            Registered members
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card-body">
+                    <div class="report-stat-row">
+                        <div class="report-mini">
+                            <div class="val">@(ViewBag.TotalMembers ?? 0)</div>
+                            <div class="lbl">Total</div>
+                        </div>
+                        <div class="report-mini">
+                            <div class="val" style="color:var(--green);">Active</div>
+                            <div class="lbl">Status</div>
+                        </div>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Dashboard"
+                       class="btn btn-lms-outline btn-sm w-100 mt-2">
+                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Borrowings Overview -->
+        <div class="col-md-6 col-xl-3">
+            <div class="report-card">
+                <div class="report-card-top">
+                    <div class="report-icon"
+                         style="background:var(--info-pale);color:var(--info);">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <div>
+                        <div class="report-title">Borrowings</div>
+                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
+                            All-time transactions
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card-body">
+                    <div class="report-stat-row">
+                        <div class="report-mini">
+                            <div class="val">@(ViewBag.TotalBorrowings ?? 0)</div>
+                            <div class="lbl">Total</div>
+                        </div>
+                        <div class="report-mini">
+                            <div class="val" style="color:var(--success);">
+                                @(ViewBag.ReturnedCount ?? 0)
+                            </div>
+                            <div class="lbl">Returned</div>
+                        </div>
+                    </div>
+                    <a asp-controller="BorrowTransaction" asp-action="Index"
+                       class="btn btn-lms-outline btn-sm w-100 mt-2">
+                        <i class="bi bi-list-check me-1"></i>View Transactions
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overdue Report -->
+        <div class="col-md-6 col-xl-3">
+            <div class="report-card" style="border-left:3px solid var(--danger);">
+                <div class="report-card-top">
+                    <div class="report-icon"
+                         style="background:var(--danger-pale);color:var(--danger);">
+                        <i class="bi bi-alarm-fill"></i>
+                    </div>
+                    <div>
+                        <div class="report-title">Overdue Books</div>
+                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
+                            Past due date
+                        </div>
+                    </div>
+                </div>
+                <div class="report-card-body">
+                    <div class="report-stat-row">
+                        <div class="report-mini">
+                            <div class="val" style="color:var(--danger);">
+                                @(ViewBag.OverdueCount ?? 0)
+                            </div>
+                            <div class="lbl">Overdue</div>
+                        </div>
+                        <div class="report-mini">
+                            <div class="val" style="color:var(--warning);">
+                                @((int)(ViewBag.TotalBorrowings ?? 0) - (int)(ViewBag.ReturnedCount ?? 0) - (int)(ViewBag.OverdueCount ?? 0))
+                            </div>
+                            <div class="lbl">On Loan</div>
+                        </div>
+                    </div>
+                    <a asp-controller="BorrowTransaction" asp-action="Index"
+                       class="btn btn-lms-danger btn-sm w-100 mt-2">
+                        <i class="bi bi-eye me-1"></i>View Overdue
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ── TOP BOOKS TABLE ── -->
+    <div class="row g-3 mb-4">
+        <div class="col-lg-7">
+            <div class="lms-table-wrapper">
+                <div class="lms-table-header">
+                    <h5 class="lms-table-title">
+                        <i class="bi bi-trophy-fill" style="color:var(--gold);"></i>
+                        Top Books in Catalog
+                    </h5>
+                    <a asp-controller="Book" asp-action="Index"
+                       class="btn btn-lms-outline btn-sm">All Books</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="lms-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Genre</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.TopBooks != null)
+                            {
+                                int rank = 1;
+                                foreach (var book in ViewBag.TopBooks)
+                                {
+                                    <tr>
+                                        <td data-label="#">
+                                            <span class="status-badge @(rank <= 3 ? "badge-reserved" : "badge-returned")">
+                                                #@rank
+                                            </span>
+                                        </td>
+                                        <td data-label="Title"><strong>@book.Title</strong></td>
+                                        <td data-label="Author">@book.Author</td>
+                                        <td data-label="Genre">@book.Genre</td>
+                                        <td data-label="Status">
+                                            @if (book.IsAvailable)
+                                            {
+                                                <span class="status-badge badge-available">Available</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge badge-borrowed">Borrowed</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <a asp-controller="Book" asp-action="Details"
+                                               asp-route-id="@book.Id"
+                                               class="btn btn-lms-outline btn-sm btn-icon">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    rank++;
+                                }
+                            }
+                            else
+                            {
+                                @* Static placeholders *@
+                                string[] sampleTitles = {
+                                    "Clean Code", "The Pragmatic Programmer",
+                                    "Design Patterns", "Introduction to Algorithms", "You Don't Know JS"
+                                };
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    <tr>
+                                        <td data-label="#">
+                                            <span class="status-badge @(i < 3 ? "badge-reserved" : "badge-returned")">
+                                                #@(i+1)
+                                            </span>
+                                        </td>
+                                        <td data-label="Title"><strong>@sampleTitles[i]</strong></td>
+                                        <td data-label="Author">Author Name</td>
+                                        <td data-label="Genre">Technology</td>
+                                        <td data-label="Status">
+                                            <span class="status-badge badge-available">Available</span>
+                                        </td>
+                                        <td>
+                                            <a asp-controller="Book" asp-action="Index"
+                                               class="btn btn-lms-outline btn-sm btn-icon">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Returns -->
+        <div class="col-lg-5">
+            <div class="lms-table-wrapper">
+                <div class="lms-table-header">
+                    <h5 class="lms-table-title">
+                        <i class="bi bi-arrow-return-left"></i>Recent Returns
+                    </h5>
+                </div>
+                <table class="lms-table">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Returned</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.RecentReturns != null)
+                        {
+                            foreach (var tx in ViewBag.RecentReturns)
+                            {
+                                <tr>
+                                    <td data-label="Book">
+                                        <div style="font-weight:600;font-size:.84rem;color:var(--navy);">
+                                            @tx.Book?.Title
+                                        </div>
+                                        <div style="font-size:.72rem;color:var(--grey-500);">
+                                            @tx.ApplicationUser?.UserName
+                                        </div>
+                                    </td>
+                                    <td data-label="Returned" style="font-size:.82rem;">
+                                        @(tx.ReturnDate.HasValue
+                                            ? tx.ReturnDate.Value.ToString("MMM dd")
+                                            : "—")
+                                    </td>
+                                    <td data-label="Status">
+                                        <span class="status-badge badge-returned">Returned</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                <tr>
+                                    <td data-label="Book">
+                                        <div style="font-weight:600;font-size:.84rem;color:var(--navy);">
+                                            Sample Book @i
+                                        </div>
+                                        <div style="font-size:.72rem;color:var(--grey-500);">
+                                            member@(i)@@example.com
+                                        </div>
+                                    </td>
+                                    <td data-label="Returned" style="font-size:.82rem;">
+                                        @DateTime.Now.AddDays(-i).ToString("MMM dd")
+                                    </td>
+                                    <td data-label="Status">
+                                        <span class="status-badge badge-returned">Returned</span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print footer -->
+    <div class="text-center mt-3 text-muted" style="font-size:.76rem;">
+        <i class="bi bi-info-circle me-1"></i>
+        Report generated: @DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt")
+        &bull; LibraSystem &bull; Library Management System
+    </div>
+
+</div>

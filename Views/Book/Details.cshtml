@@ -1,0 +1,216 @@
+@model LibraryManagementSystem.Models.Book
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1 class="page-title"><i class="bi bi-book me-2"></i>Book Details</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Book" asp-action="Index">Books</a>
+                        </li>
+                        <li class="breadcrumb-item active">@Model.Title</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="d-flex gap-2">
+                <a asp-controller="Book" asp-action="Index"
+                   class="btn btn-sm"
+                   style="border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.32rem .85rem;">
+                    <i class="bi bi-arrow-left me-1"></i>Back
+                </a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id"
+                       class="btn btn-lms-gold btn-sm">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-4">
+    <div class="row g-4">
+
+        <!-- LEFT: Cover + Actions -->
+        <div class="col-lg-3 col-md-4">
+
+            <!-- Cover -->
+            <div class="detail-cover mb-3">
+                <i class="bi bi-book-half"></i>
+                <div style="position:absolute;top:12px;right:12px;">
+                    @if (Model.IsAvailable)
+                    {
+                        <span class="status-badge badge-available">Available</span>
+                    }
+                    else
+                    {
+                        <span class="status-badge badge-borrowed">Borrowed</span>
+                    }
+                </div>
+            </div>
+
+            <!-- Availability summary -->
+            <div class="lms-card mb-3">
+                <div class="lms-card-body text-center">
+                    <div style="font-size:1.6rem;font-weight:700;font-family:var(--font-display);
+                                color:@(Model.IsAvailable ? "var(--success)" : "var(--danger)");">
+                        @(Model.IsAvailable ? "Available" : "Not Available")
+                    </div>
+                    <div style="font-size:.75rem;color:var(--grey-500);margin-top:.2rem;">
+                        Current Status
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="d-grid gap-2">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="BorrowTransaction" asp-action="Create"
+                       asp-route-bookId="@Model.Id"
+                       class="btn btn-lms-primary">
+                        <i class="bi bi-arrow-right-circle me-1"></i>Issue Book
+                    </a>
+                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@Model.Id"
+                       class="btn btn-lms-secondary">
+                        <i class="bi bi-pencil me-1"></i>Edit Book
+                    </a>
+                    <a asp-controller="Book" asp-action="Delete" asp-route-id="@Model.Id"
+                       class="btn btn-lms-danger">
+                        <i class="bi bi-trash me-1"></i>Delete
+                    </a>
+                }
+                @if (User.IsInRole("Member"))
+                {
+                    @if (Model.IsAvailable)
+                    {
+                        <a asp-controller="BorrowTransaction" asp-action="Create"
+                           asp-route-bookId="@Model.Id"
+                           class="btn btn-lms-primary">
+                            <i class="bi bi-bookmark-plus me-1"></i>Borrow This Book
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-lms-primary" disabled>
+                            <i class="bi bi-bookmark-x me-1"></i>Not Available
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- RIGHT: Book Info -->
+        <div class="col-lg-9 col-md-8">
+
+            <div class="mb-3">
+                @if (!string.IsNullOrEmpty(Model.Genre))
+                {
+                    <span class="status-badge badge-available mb-2 d-inline-flex">@Model.Genre</span>
+                }
+                <h2 style="font-family:var(--font-display);font-size:1.85rem;
+                            font-weight:700;color:var(--navy);margin-bottom:.25rem;">
+                    @Model.Title
+                </h2>
+                <p style="font-size:.97rem;color:var(--grey-600);margin-bottom:.4rem;">
+                    <i class="bi bi-person-fill me-1 text-green"></i>
+                    <strong>@Model.Author</strong>
+                </p>
+            </div>
+
+            <!-- Description -->
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div class="lms-card mb-4">
+                    <div class="lms-card-header">
+                        <h5 class="lms-card-title">
+                            <i class="bi bi-file-text"></i>Description
+                        </h5>
+                    </div>
+                    <div class="lms-card-body">
+                        <p style="color:var(--grey-700);line-height:1.75;margin:0;">
+                            @Model.Description
+                        </p>
+                    </div>
+                </div>
+            }
+
+            <!-- Book Info -->
+            <div class="lms-card">
+                <div class="lms-card-header">
+                    <h5 class="lms-card-title">
+                        <i class="bi bi-info-circle"></i>Book Information
+                    </h5>
+                </div>
+                <div class="lms-card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="info-list">
+                                <li>
+                                    <span class="info-label">Title</span>
+                                    <span class="info-value">@Model.Title</span>
+                                </li>
+                                <li>
+                                    <span class="info-label">Author</span>
+                                    <span class="info-value">@Model.Author</span>
+                                </li>
+                                <li>
+                                    <span class="info-label">ISBN</span>
+                                    <span class="info-value"
+                                          style="font-family:monospace;">@(Model.ISBN ?? "N/A")</span>
+                                </li>
+                                <li>
+                                    <span class="info-label">Genre</span>
+                                    <span class="info-value">@(Model.Genre ?? "N/A")</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="info-list">
+                                <li>
+                                    <span class="info-label">Publisher</span>
+                                    <span class="info-value">@(Model.Publisher ?? "N/A")</span>
+                                </li>
+                                <li>
+                                    <span class="info-label">Edition</span>
+                                    <span class="info-value">@(Model.Edition ?? "N/A")</span>
+                                </li>
+                                <li>
+                                    <span class="info-label">Year</span>
+                                    <span class="info-value">
+                                        @(Model.PublishedYear.HasValue ? Model.PublishedYear.ToString() : "N/A")
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="info-label">Status</span>
+                                    <span class="info-value">
+                                        @if (Model.IsAvailable)
+                                        {
+                                            <span class="status-badge badge-available">Available</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge badge-borrowed">Borrowed</span>
+                                        }
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

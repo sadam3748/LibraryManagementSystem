@@ -1,0 +1,189 @@
+@model IEnumerable<LibraryManagementSystem.Models.Book>
+@{
+    ViewData["Title"] = "Book Catalog";
+}
+
+<!-- Page Header -->
+<div class="page-header">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h1 class="page-title"><i class="bi bi-journals me-2"></i>Book Catalog</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item active">Books</li>
+                    </ol>
+                </nav>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Book" asp-action="Create" class="btn btn-lms-gold">
+                    <i class="bi bi-plus-circle me-1"></i>Add New Book
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-4">
+
+    <!-- Search Bar -->
+    <div class="lms-filter-bar">
+        <form asp-controller="Book" asp-action="Index" method="get">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-5 col-lg-4">
+                    <div class="lms-search-wrap">
+                        <i class="bi bi-search"></i>
+                        <input type="text" name="search" class="form-control"
+                               placeholder="Search by title or author..."
+                               value="@ViewBag.Search" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <select name="genre" class="form-select">
+                        <option value="">All Genres</option>
+                        @if (ViewBag.Genres != null)
+                        {
+                            foreach (var g in ViewBag.Genres)
+                            {
+                                <option value="@g">@g</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2 col-lg-2">
+                    <button type="submit" class="btn btn-lms-primary w-100">
+                        <i class="bi bi-funnel-fill me-1"></i>Filter
+                    </button>
+                </div>
+                <div class="col-md-2 col-lg-2">
+                    <a asp-controller="Book" asp-action="Index"
+                       class="btn w-100" style="border:1px solid var(--grey-300);color:var(--grey-700);">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                    </a>
+                </div>
+                <div class="col-lg-2 text-lg-end d-none d-lg-block">
+                    <small class="text-muted">@Model.Count() book(s)</small>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Book Table -->
+    <div class="lms-table-wrapper">
+        <div class="lms-table-header">
+            <h5 class="lms-table-title"><i class="bi bi-list-ul"></i>All Books</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="lms-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Genre</th>
+                        <th>ISBN</th>
+                        <th>Year</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        int sn = 1;
+                        foreach (var book in Model)
+                        {
+                            <tr>
+                                <td data-label="#">@sn</td>
+
+                                <td data-label="Title">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width:32px;height:40px;
+                                                    background:linear-gradient(135deg,var(--navy),var(--navy-light));
+                                                    border-radius:4px;display:grid;place-items:center;flex-shrink:0;">
+                                            <i class="bi bi-book-fill"
+                                               style="color:rgba(255,255,255,.4);font-size:.72rem;"></i>
+                                        </div>
+                                        <span style="font-weight:600;color:var(--navy);">@book.Title</span>
+                                    </div>
+                                </td>
+
+                                <td data-label="Author">@book.Author</td>
+                                <td data-label="Genre">@book.Genre</td>
+
+                                <td data-label="ISBN"
+                                    style="font-family:monospace;font-size:.8rem;">
+                                    @book.ISBN
+                                </td>
+
+                                <td data-label="Year">@book.PublishedYear</td>
+
+                                <td data-label="Status">
+                                    @if (book.IsAvailable)
+                                    {
+                                        <span class="status-badge badge-available">Available</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge badge-borrowed">Borrowed</span>
+                                    }
+                                </td>
+
+                                <td data-label="Actions">
+                                    <div class="d-flex gap-1 flex-wrap">
+                                        <a asp-controller="Book" asp-action="Details"
+                                           asp-route-id="@book.Id"
+                                           class="btn btn-lms-outline btn-sm btn-icon"
+                                           title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a asp-controller="Book" asp-action="Edit"
+                                               asp-route-id="@book.Id"
+                                               class="btn btn-lms-secondary btn-sm btn-icon"
+                                               title="Edit">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a asp-controller="Book" asp-action="Delete"
+                                               asp-route-id="@book.Id"
+                                               class="btn btn-lms-danger btn-sm btn-icon"
+                                               title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                            sn++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-3 opacity-25"></i>
+                                <strong>No books found.</strong>
+                                <p class="mb-0 mt-1" style="font-size:.83rem;">
+                                    Try adjusting your search or filters.
+                                </p>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a asp-controller="Book" asp-action="Create"
+                                       class="btn btn-lms-primary mt-3">
+                                        <i class="bi bi-plus-circle me-1"></i>Add First Book
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>

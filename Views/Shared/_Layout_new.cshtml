@@ -1,0 +1,69 @@
+{{!-- === ACCOUNT NAV SECTION — paste inside your
+<ul class="navbar-nav ms-auto ...">
+    === --}}
+
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+               href="#"
+               id="accountDropdown"
+               role="button"
+               data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold"
+                      style="width:32px;height:32px;font-size:0.85rem;">
+                    @(User.Identity.Name != null && User.Identity.Name.Length > 0
+                                    ? User.Identity.Name[0].ToString().ToUpper()
+                                    : "U")
+            </span>
+            <span class="d-none d-md-inline text-dark fw-semibold" style="font-size:0.9rem;">
+                @User.Identity.Name
+            </span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3 mt-1" aria-labelledby="accountDropdown">
+            <li>
+                <div class="dropdown-header text-muted small px-3 py-2">
+                    <i class="bi bi-person-circle me-1"></i>Signed in as<br />
+                    <strong class="text-dark">@User.Identity.Name</strong>
+                </div>
+            </li>
+            <li><hr class="dropdown-divider my-1" /></li>
+            <li>
+                <a class="dropdown-item py-2"
+                   asp-controller="Account"
+                   asp-action="Profile">
+                    <i class="bi bi-person me-2 text-primary"></i>My Profile
+                </a>
+            </li>
+            <li><hr class="dropdown-divider my-1" /></li>
+            <li>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="px-3 py-1">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger btn-sm w-100 rounded-3">
+                        <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </li>
+    }
+else
+{
+        <li class="nav-item">
+            <a class="nav-link fw-semibold"
+               asp-controller="Account"
+               asp-action="Login">
+                <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+            </a>
+        </li>
+        <li class="nav-item ms-2">
+            <a class="btn btn-primary btn-sm rounded-3 px-3 py-2 fw-semibold"
+               asp-controller="Account"
+               asp-action="Register">
+                <i class="bi bi-person-plus me-1"></i>Register
+            </a>
+        </li>
+}
+
+    {{!-- === END ACCOUNT NAV SECTION === --}}

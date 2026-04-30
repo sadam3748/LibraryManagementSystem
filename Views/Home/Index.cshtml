@@ -1,0 +1,322 @@
+@{
+    ViewData["Title"] = "Welcome to LibraSystem";
+    /*
+     * Optional ViewBag properties your HomeController may pass:
+     *   ViewBag.TotalBooks     (int)
+     *   ViewBag.TotalMembers   (int)
+     *   ViewBag.NewArrivals    (IEnumerable<Book>)
+     *   ViewBag.PopularBooks   (IEnumerable<Book>)
+     * All sections fall back to static placeholders if ViewBag is null.
+     */
+}
+
+<!-- ========== HERO ========== -->
+<section class="hero-section">
+    <div class="container hero-content">
+        <div class="row">
+            <div class="col-lg-7">
+                <div class="hero-eyebrow">
+                    <i class="bi bi-mortarboard-fill"></i>
+                    Student Project &mdash; Library Management System
+                </div>
+
+                <h1 class="hero-title">
+                    Your Smart<br><span>Digital Library</span>
+                </h1>
+
+                <p class="hero-desc">
+                    Discover, borrow, and manage books effortlessly.
+                    LibraSystem brings your library experience online &mdash; fast, simple, and always accessible.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <a asp-controller="Book" asp-action="Index" class="btn btn-lms-gold px-4">
+                            <i class="bi bi-search me-1"></i>Browse Books
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-lms-primary px-4">
+                            <i class="bi bi-person-plus me-1"></i>Get Started
+                        </a>
+                        <a asp-controller="Account" asp-action="Login"
+                           class="btn px-4"
+                           style="border:1.5px solid rgba(255,255,255,.45);color:#fff;">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                        </a>
+                    }
+                </div>
+
+                <div class="hero-stats">
+                    <div>
+                        <div class="hero-stat-num">@(ViewBag.TotalBooks ?? 500)+</div>
+                        <div class="hero-stat-label">Books</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">@(ViewBag.TotalMembers ?? 200)+</div>
+                        <div class="hero-stat-label">Members</div>
+                    </div>
+                    <div>
+                        <div class="hero-stat-num">24 / 7</div>
+                        <div class="hero-stat-label">Access</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== GROUP / TEAM TABLE ========== -->
+<section class="content-section-alt">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="group-section">
+                    <div class="group-header">
+                        <h3><i class="bi bi-people-fill me-2"></i>Project Team</h3>
+                        <p>Library Management System &mdash; Database &amp; Application Development</p>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="lms-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Student Name</th>
+                                    <th>Student ID</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td data-label="#">1</td>
+                                    <td data-label="Name">
+                                        <i class="bi bi-person-circle me-2 text-green"></i>
+                                        <strong>Member Name 1</strong>
+                                    </td>
+                                    <td data-label="Student ID">
+                                        <span class="status-badge badge-available">BSCS-XXXX-001</span>
+                                    </td>
+                                    <td data-label="Role">Team Lead / Backend</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="#">2</td>
+                                    <td data-label="Name">
+                                        <i class="bi bi-person-circle me-2 text-green"></i>
+                                        <strong>Member Name 2</strong>
+                                    </td>
+                                    <td data-label="Student ID">
+                                        <span class="status-badge badge-available">BSCS-XXXX-002</span>
+                                    </td>
+                                    <td data-label="Role">Frontend / UI Design</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="#">3</td>
+                                    <td data-label="Name">
+                                        <i class="bi bi-person-circle me-2 text-green"></i>
+                                        <strong>Member Name 3</strong>
+                                    </td>
+                                    <td data-label="Student ID">
+                                        <span class="status-badge badge-available">BSCS-XXXX-003</span>
+                                    </td>
+                                    <td data-label="Role">Database / EF Core</td>
+                                </tr>
+                                <tr>
+                                    <td data-label="#">4</td>
+                                    <td data-label="Name">
+                                        <i class="bi bi-person-circle me-2 text-green"></i>
+                                        <strong>Member Name 4</strong>
+                                    </td>
+                                    <td data-label="Student ID">
+                                        <span class="status-badge badge-available">BSCS-XXXX-004</span>
+                                    </td>
+                                    <td data-label="Role">Reports / Testing</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="lms-card-footer text-center">
+                        <small class="text-muted">
+                            <i class="bi bi-building me-1"></i>
+                            Department of Computer Science &bull; Academic Year 2024&ndash;2025
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== NEW ARRIVALS ========== -->
+<section class="content-section">
+    <div class="container">
+        <div class="section-row">
+            <h2 class="section-title">New Arrivals</h2>
+            <a asp-controller="Book" asp-action="Index" class="section-link">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 g-3">
+            @if (ViewBag.NewArrivals != null)
+            {
+                foreach (var book in ViewBag.NewArrivals)
+                {
+                    <div class="col">
+                        <div class="book-card">
+                            <div class="book-cover"><i class="bi bi-book"></i></div>
+                            <div class="book-card-body">
+                                <div class="book-title">@book.Title</div>
+                                <div class="book-author">
+                                    <i class="bi bi-person-fill me-1"></i>@book.Author
+                                </div>
+                                <div class="book-meta">
+                                    <span class="status-badge @(book.IsAvailable ? "badge-available" : "badge-borrowed")">
+                                        @(book.IsAvailable ? "Available" : "Borrowed")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="book-card-footer">
+                                <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id"
+                                   class="btn btn-lms-outline btn-sm flex-fill justify-content-center">
+                                    <i class="bi bi-eye me-1"></i>Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                @* Static placeholder cards *@
+                string[] titles  = { "The Great Gatsby", "1984", "To Kill a Mockingbird", "Brave New World", "Dune" };
+                string[] authors = { "F. Scott Fitzgerald", "George Orwell", "Harper Lee", "Aldous Huxley", "Frank Herbert" };
+                for (int i = 0; i < 5; i++)
+                {
+                    <div class="col">
+                        <div class="book-card">
+                            <div class="book-cover"><i class="bi bi-book"></i></div>
+                            <div class="book-card-body">
+                                <div class="book-title">@titles[i]</div>
+                                <div class="book-author"><i class="bi bi-person-fill me-1"></i>@authors[i]</div>
+                                <div class="book-meta">
+                                    <span class="status-badge badge-available">Available</span>
+                                </div>
+                            </div>
+                            <div class="book-card-footer">
+                                <a asp-controller="Book" asp-action="Index"
+                                   class="btn btn-lms-outline btn-sm flex-fill justify-content-center">
+                                    <i class="bi bi-eye me-1"></i>Browse
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ========== POPULAR BOOKS TABLE ========== -->
+<section class="content-section-alt">
+    <div class="container">
+        <div class="section-row">
+            <h2 class="section-title">Most Borrowed</h2>
+            <a asp-controller="Book" asp-action="Index" class="section-link">
+                View All <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="lms-table-wrapper">
+            <div class="table-responsive">
+                <table class="lms-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>Author</th>
+                            <th>Genre</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.PopularBooks != null)
+                        {
+                            int rank = 1;
+                            foreach (var book in ViewBag.PopularBooks)
+                            {
+                                <tr>
+                                    <td data-label="#">
+                                        <span class="status-badge @(rank <= 3 ? "badge-reserved" : "badge-returned")">#@rank</span>
+                                    </td>
+                                    <td data-label="Title"><strong>@book.Title</strong></td>
+                                    <td data-label="Author">@book.Author</td>
+                                    <td data-label="Genre">@book.Genre</td>
+                                    <td data-label="Status">
+                                        <span class="status-badge @(book.IsAvailable ? "badge-available" : "badge-borrowed")">
+                                            @(book.IsAvailable ? "Available" : "Borrowed")
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id"
+                                           class="btn btn-lms-outline btn-sm btn-icon">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                rank++;
+                            }
+                        }
+                        else
+                        {
+                            string[] pt = { "Clean Code", "The Pragmatic Programmer", "Design Patterns", "Introduction to Algorithms", "You Don't Know JS" };
+                            string[] pa = { "Robert C. Martin", "David Thomas", "Gang of Four", "Cormen et al.", "Kyle Simpson" };
+                            for (int i = 0; i < 5; i++)
+                            {
+                                <tr>
+                                    <td data-label="#"><span class="status-badge @(i < 3 ? "badge-reserved" : "badge-returned")">#@(i+1)</span></td>
+                                    <td data-label="Title"><strong>@pt[i]</strong></td>
+                                    <td data-label="Author">@pa[i]</td>
+                                    <td data-label="Genre">Technology</td>
+                                    <td data-label="Status"><span class="status-badge badge-available">Available</span></td>
+                                    <td>
+                                        <a asp-controller="Book" asp-action="Index" class="btn btn-lms-outline btn-sm btn-icon">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== CTA (guests only) ========== -->
+@if (!User.Identity!.IsAuthenticated)
+{
+    <section style="background:linear-gradient(120deg,var(--navy) 0%,var(--navy-light) 100%);padding:3.2rem 0;">
+        <div class="container text-center">
+            <h2 style="font-family:var(--font-display);color:#fff;font-size:1.65rem;margin-bottom:.55rem;">
+                Ready to Start Reading?
+            </h2>
+            <p style="color:rgba(255,255,255,.62);max-width:450px;margin:0 auto 1.4rem;">
+                Join LibraSystem today and access hundreds of books, track borrowings, and more.
+            </p>
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a asp-controller="Account" asp-action="Register" class="btn btn-lms-gold px-4">
+                    <i class="bi bi-person-plus me-1"></i>Create Account
+                </a>
+                <a asp-controller="Account" asp-action="Login"
+                   class="btn px-4"
+                   style="border:1.5px solid rgba(255,255,255,.38);color:#fff;">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+                </a>
+            </div>
+        </div>
+    </section>
+}
