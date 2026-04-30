@@ -1,0 +1,123 @@
+﻿@model ApplicationUser
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var roles = ViewBag.Roles as IList<string>;
+    var primaryRole = (roles != null && roles.Count > 0) ? roles[0] : "Member";
+    bool isAdmin = User.IsInRole("Admin");
+    var initial = (!string.IsNullOrEmpty(Model.FullName)) ? Model.FullName[0].ToString().ToUpper() : "U";
+}
+
+<div class="dashboard-wrap">
+    <div class="container" style="max-width:700px;">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="lms-alert-success mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>@TempData["Success"]</span>
+            </div>
+        }
+
+        <div class="lms-card">
+
+            {{!-- Green Gradient Header --}}
+            <div class="profile-card-head">
+                <div class="profile-avatar-circle">@initial</div>
+                <div>
+                    <h3 class="profile-display-name">@Model.FullName</h3>
+                    @if (isAdmin)
+                    {
+                        <span class="lms-role-badge admin-badge">
+                            <i class="bi bi-shield-fill-check me-1"></i>Admin
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="lms-role-badge member-badge">
+                            <i class="bi bi-person-check-fill me-1"></i>Member
+                        </span>
+                    }
+                </div>
+            </div>
+
+        @*     {{!-- White Body --}} *@
+            <div class="lms-card-body">
+
+                <h5 class="lms-card-title mb-4 pb-2" style="border-bottom:1px solid var(--grey-200); font-size:.93rem;">
+                    <i class="bi bi-person-lines-fill"></i> Account Information
+                </h5>
+
+                <div class="profile-info-grid">
+
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">
+                            <i class="bi bi-person me-2 text-green"></i>Full Name
+                        </span>
+                        <span class="profile-info-value">@Model.FullName</span>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">
+                            <i class="bi bi-envelope me-2 text-green"></i>Email
+                        </span>
+                        <span class="profile-info-value">@Model.Email</span>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <span class="profile-info-label">
+                            <i class="bi bi-at me-2 text-green"></i>Username
+                        </span>
+                        <span class="profile-info-value">@Model.UserName</span>
+                    </div>
+
+                    <div class="profile-info-row" style="border-bottom:none;">
+                        <span class="profile-info-label">
+                            <i class="bi bi-shield me-2 text-green"></i>Role
+                        </span>
+                        <span class="profile-info-value">
+                            @if (isAdmin)
+                            {
+                                <span class="lms-role-badge admin-badge">
+                                    <i class="bi bi-shield-fill-check me-1"></i>Admin
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="lms-role-badge member-badge">
+                                    <i class="bi bi-person-check-fill me-1"></i>Member
+                                </span>
+                            }
+                        </span>
+                    </div>
+
+                </div>
+@* 
+                {{!-- Actions --}} *@
+                <div class="d-flex flex-wrap gap-2 mt-4 pt-3" style="border-top:1px solid var(--grey-200);">
+                    @if (isAdmin)
+                    {
+                        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-lms-primary">
+                            <i class="bi bi-speedometer2"></i> Back to Dashboard
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Member" asp-action="Dashboard" class="btn btn-lms-primary">
+                            <i class="bi bi-house"></i> Back to Dashboard
+                        </a>
+                    }
+
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-lms-danger">
+                            <i class="bi bi-box-arrow-right"></i> Sign Out
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -251,6 +251,7 @@ D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.MvcApplicationPartsAssemblyInfo.cache
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.RazorAssemblyInfo.cache
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.RazorAssemblyInfo.cs
+D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.sourcelink.json
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
@@ -268,4 +269,3 @@ D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.pdb
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.genruntimeconfig.cache
 D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\ref\LibraryManagementSystem.dll
-D:\Other Projects\LibraryManagementSystem\LibraryManagementSystem\obj\Debug\net8.0\LibraryManagementSystem.sourcelink.json

@@ -786,6 +786,60 @@ textarea.form-control { resize: vertical; min-height: 95px; }
     font-weight: 500;
 }
 
+/* ── 25b. PROFILE STATUS TILES ── */
+.profile-status-tile {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    background: var(--grey-50);
+    border: 1px solid var(--grey-200);
+    border-radius: var(--radius-md);
+    padding: .85rem 1rem;
+}
+
+.profile-status-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.profile-status-label {
+    font-size: .72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--grey-500);
+    line-height: 1;
+    margin-bottom: .2rem;
+}
+
+.profile-status-value {
+    font-size: .88rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+/* ── 27. BOOK GENRE TAG ── */
+.book-genre-tag {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(26, 39, 68, 0.72);
+    color: var(--gold-light);
+    font-size: .71rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    padding: .22rem .7rem;
+    border-radius: 20px;
+    border: 1px solid rgba(201, 168, 76, .35);
+    backdrop-filter: blur(4px);
+}
+
+
 /* ── 26. AUTH FORM CHECK ── */
 .form-check-input:checked {
     background-color: var(--green);
