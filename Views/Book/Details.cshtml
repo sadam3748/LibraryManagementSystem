@@ -46,6 +46,24 @@
 
 <!-- ── BODY ── -->
 <div class="dashboard-wrap">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="container-fluid px-0">
         <div class="row g-4 mx-0">
 
@@ -117,34 +135,61 @@
                 @if (isMember)
                 {
                     <div class="lms-card mb-3">
+                        <div class="lms-card-header">
+                            <h5 class="lms-card-title" style="font-size:.82rem;">
+                                <i class="bi bi-lightning-charge-fill"></i>Member Actions
+                            </h5>
+                        </div>
+
                         <div class="lms-card-body d-grid gap-2">
                             @if (isAvailable)
                             {
-                                <a asp-controller="BorrowTransaction" asp-action="Create"
+                                <a asp-controller="BorrowTransaction"
+                                   asp-action="Create"
                                    asp-route-bookId="@Model.Id"
                                    class="btn btn-lms-primary">
-                                    <i class="bi bi-bookmark-plus me-1"></i>Borrow This Book
+                                    <i class="bi bi-bookmark-plus me-1"></i>
+                                    Borrow This Book
                                 </a>
                             }
                             else
                             {
-                                <button class="btn btn-lms-secondary" disabled>
-                                    <i class="bi bi-bookmark-x me-1"></i>Currently Unavailable
-                                </button>
+                                <form asp-controller="Reservation"
+                                      asp-action="ReserveBook"
+                                      method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="bookId" value="@Model.Id" />
+
+                                    <button type="submit" class="btn btn-lms-primary w-100">
+                                        <i class="bi bi-bookmark-check me-1"></i>
+                                        Reserve This Book
+                                    </button>
+                                </form>
+
                                 <p class="mb-0 text-center" style="font-size:.75rem; color:var(--grey-500);">
                                     <i class="bi bi-info-circle me-1"></i>
-                                    This book is currently on loan. Check back later.
+                                    This book is currently on loan. You can reserve it.
                                 </p>
                             }
-                            <a asp-controller="Book" asp-action="Index"
+
+                            <a asp-controller="Reservation"
+                               asp-action="MyReservations"
                                class="btn btn-lms-outline">
-                                <i class="bi bi-search me-1"></i>Browse More Books
+                                <i class="bi bi-bookmark me-1"></i>
+                                My Reservations
+                            </a>
+
+                            <a asp-controller="Book"
+                               asp-action="Index"
+                               class="btn btn-lms-outline">
+                                <i class="bi bi-search me-1"></i>
+                                Browse More Books
                             </a>
                         </div>
                     </div>
                 }
 
-                <!-- Quick Stats Tile -->
+              <!-- Quick Stats Tile -->
                 <div class="lms-card">
                     <div class="lms-card-body">
                         <div class="d-flex flex-column gap-3">

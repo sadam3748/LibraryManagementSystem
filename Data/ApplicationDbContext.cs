@@ -15,6 +15,10 @@ namespace LibraryManagementSystem.Data
 
         public DbSet<BorrowTransaction> BorrowTransactions { get; set; }
 
+        public DbSet<BorrowingSetting> BorrowingSettings { get; set; }
+
+        public DbSet<Reservation> Reservations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -29,6 +33,18 @@ namespace LibraryManagementSystem.Data
                 .HasOne(bt => bt.ApplicationUser)
                 .WithMany()
                 .HasForeignKey(bt => bt.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Reservation>()
+                .HasOne(r => r.Book)
+                .WithMany()
+                .HasForeignKey(r => r.BookId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Reservation>()
+                .HasOne(r => r.ApplicationUser)
+                .WithMany()
+                .HasForeignKey(r => r.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

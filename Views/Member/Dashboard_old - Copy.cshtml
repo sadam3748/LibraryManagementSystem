@@ -1,14 +1,13 @@
 @{
     ViewData["Title"] = "My Dashboard";
     /*
-     * ViewBag values from MemberController:
+     * Optional ViewBag values your MemberController can pass:
      *   ViewBag.MyBorrowings   (IEnumerable<BorrowTransaction>)
      *   ViewBag.TotalBorrowed  (int)
      *   ViewBag.ActiveCount    (int)
      *   ViewBag.OverdueCount   (int)
+     * All fall back gracefully if null.
      */
-    int overdueCount = ViewBag.OverdueCount ?? 0;
-    int activeCount = ViewBag.ActiveCount ?? 0;
 }
 
 <!-- Page Header -->
@@ -17,13 +16,12 @@
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
             <div>
                 <h1 class="page-title"><i class="bi bi-grid me-2"></i>My Dashboard</h1>
-                <p class="page-subtitle">Your personal borrowing activity and reading history</p>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item">
                             <a asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="breadcrumb-item active">My Dashboard</li>
+                        <li class="breadcrumb-item active">Dashboard</li>
                     </ol>
                 </nav>
             </div>
@@ -36,42 +34,13 @@
 
 <div class="dashboard-wrap">
 
-    <!-- Overdue Alert Banner -->
-    @if (overdueCount > 0)
-    {
-        <div class="lms-alert-error d-flex align-items-center gap-3 mb-4" style="border-radius:var(--radius-md)!important;">
-            <i class="bi bi-alarm-fill fs-5 flex-shrink-0"></i>
-            <div class="flex-grow-1">
-                <strong>You have @overdueCount overdue @(overdueCount == 1 ? "book" : "books").</strong>
-                Please return @(overdueCount == 1 ? "it" : "them") as soon as possible to avoid penalties.
-            </div>
-            <a asp-controller="BorrowTransaction" asp-action="MyHistory" class="btn btn-lms-danger btn-sm flex-shrink-0">
-                <i class="bi bi-eye me-1"></i>View
-            </a>
-        </div>
-    }
-
     <!-- Welcome Banner -->
-    <div class="dashboard-welcome mb-4">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-            <div>
-                <h2>Hello, @User.Identity!.Name</h2>
-                @if (activeCount > 0)
-                {
-                    <p>You currently have <strong style="color:var(--gold-light);">@activeCount</strong> borrowed @(activeCount == 1 ? "book" : "books"). Happy reading!</p>
-                }
-                else
-                {
-                    <p>No active borrowings. Browse our catalogue and borrow a book today.</p>
-                }
-                <div class="welcome-date">
-                    <i class="bi bi-calendar3 me-1"></i>
-                    @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
-                </div>
-            </div>
-            <div class="d-none d-lg-block text-end" style="opacity:.5;">
-                <i class="bi bi-book-half" style="font-size:3.5rem; color:var(--gold-light);"></i>
-            </div>
+    <div class="dashboard-welcome">
+        <h2>Hello, @User.Identity!.Name! 📚</h2>
+        <p>Track your borrowed books and reading history below.</p>
+        <div class="welcome-date">
+            <i class="bi bi-calendar3 me-1"></i>
+            @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
         </div>
     </div>
 
@@ -90,7 +59,7 @@
             <div class="stat-box green">
                 <div class="stat-icon"><i class="bi bi-arrow-left-right"></i></div>
                 <div class="stat-data">
-                    <div class="stat-number">@activeCount</div>
+                    <div class="stat-number">@(ViewBag.ActiveCount ?? 0)</div>
                     <div class="stat-label">Currently Borrowed</div>
                 </div>
             </div>
@@ -99,7 +68,7 @@
             <div class="stat-box danger">
                 <div class="stat-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
                 <div class="stat-data">
-                    <div class="stat-number">@overdueCount</div>
+                    <div class="stat-number">@(ViewBag.OverdueCount ?? 0)</div>
                     <div class="stat-label">Overdue</div>
                 </div>
             </div>
@@ -124,9 +93,6 @@
                 <a asp-controller="Account" asp-action="Profile" class="quick-btn">
                     <i class="bi bi-person-fill"></i>My Profile
                 </a>
-                <a asp-controller="Home" asp-action="Index" class="quick-btn">
-                    <i class="bi bi-house"></i>Home
-                </a>
             </div>
         </div>
     </div>
@@ -135,11 +101,11 @@
     <div class="lms-table-wrapper">
         <div class="lms-table-header">
             <h5 class="lms-table-title">
-                <i class="bi bi-book-fill"></i>My Recent Borrowing History
+                <i class="bi bi-book-fill"></i>My Borrow History
             </h5>
             <a asp-controller="BorrowTransaction" asp-action="MyHistory"
                class="btn btn-lms-outline btn-sm">
-                <i class="bi bi-arrow-right me-1"></i>View All
+                View All
             </a>
         </div>
         <div class="table-responsive">
@@ -148,9 +114,9 @@
                     <tr>
                         <th>#</th>
                         <th>Book</th>
-                        <th>Borrowed</th>
+                        <th>Borrow Date</th>
                         <th>Due Date</th>
-                        <th>Returned</th>
+                        <th>Return Date</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -160,32 +126,35 @@
                         int sn = 1;
                         foreach (var tx in ViewBag.MyBorrowings)
                         {
-                            bool isOverdue = tx.ReturnDate == null && tx.DueDate < DateTime.Today;
-                            bool returned = tx.ReturnDate != null;
+                            bool isOverdue = tx.ReturnDate == null
+                                             && tx.DueDate < DateTime.Today;
+                            bool returned  = tx.ReturnDate != null;
+
                             <tr>
                                 <td data-label="#">@sn</td>
                                 <td data-label="Book">
-                                    <div style="font-weight:600; color:var(--navy); font-size:.88rem;">
-                                        @tx.Book?.Title
-                                    </div>
-                                    <div style="font-size:.74rem; color:var(--grey-500);">
-                                        @tx.Book?.Author
+                                    <div>
+                                        <strong>@tx.Book?.Title</strong>
+                                        <div style="font-size:.73rem;color:var(--grey-500);">
+                                            @tx.Book?.Author
+                                        </div>
                                     </div>
                                 </td>
-                                <td data-label="Borrowed">
+                                <td data-label="Borrow Date">
                                     @tx.BorrowDate.ToString("MMM dd, yyyy")
                                 </td>
-                                <td data-label="Due Date" class="@(isOverdue ? "text-danger fw-semibold" : "")">
+                                <td data-label="Due Date"
+                                    class="@(isOverdue ? "text-danger fw-semibold" : "")">
                                     @tx.DueDate.ToString("MMM dd, yyyy")
                                     @if (isOverdue)
                                     {
-                                        <div style="font-size:.72rem;">
-                                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Overdue
-                                        </div>
+                                        <br /><small><i class="bi bi-exclamation-triangle-fill"></i> Overdue</small>
                                     }
                                 </td>
-                                <td data-label="Returned">
-                                    @(tx.ReturnDate.HasValue? tx.ReturnDate.Value.ToString("MMM dd, yyyy") : "—")
+                                <td data-label="Return Date">
+                                    @(tx.ReturnDate.HasValue
+                                        ? tx.ReturnDate.Value.ToString("MMM dd, yyyy")
+                                        : "—")
                                 </td>
                                 <td data-label="Status">
                                     @if (returned)
@@ -208,12 +177,9 @@
                     else
                     {
                         <tr>
-                            <td colspan="6" class="text-center py-5">
-                                <i class="bi bi-book d-block mb-2" style="font-size:2.5rem; color:var(--grey-300);"></i>
-                                <strong style="color:var(--grey-600);">No borrowing history yet</strong>
-                                <div style="font-size:.82rem; color:var(--grey-500); margin-top:.3rem;">
-                                    Find a book you enjoy and borrow it today.
-                                </div>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-check-circle-fill text-success fs-2 d-block mb-2"></i>
+                                <strong>No borrowing history yet.</strong><br />
                                 <a asp-controller="Book" asp-action="Index"
                                    class="btn btn-lms-primary btn-sm mt-3">
                                     <i class="bi bi-search me-1"></i>Browse Books

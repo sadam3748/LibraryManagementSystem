@@ -84,6 +84,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9va1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/BorrowingSetting/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9ycm93aW5nU2V0dGluZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/BorrowTransaction/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9ycm93VHJhbnNhY3Rpb25cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/BorrowTransaction/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9ycm93VHJhbnNhY3Rpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/BorrowTransaction/MyBorrowings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQm9ycm93VHJhbnNhY3Rpb25cTXlCb3Jyb3dpbmdzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -100,20 +116,28 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXERhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Member/Dashboard_new.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXERhc2hib2FyZF9uZXcuY3NodG1s
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Member/Dashboard_old - Copy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVtYmVyXERhc2hib2FyZF9vbGQgLSBDb3B5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Reports/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Reservation/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Reservation/MyReservations.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YXRpb25cTXlSZXNlcnZhdGlvbnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Shared/_Layout_new.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRfbmV3LmNzaHRtbA==
+[D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Shared/_Layout_old.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRfb2xkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Other Projects/LibraryManagementSystem/LibraryManagementSystem/Views/Shared/_ValidationScriptsPartial.cshtml]

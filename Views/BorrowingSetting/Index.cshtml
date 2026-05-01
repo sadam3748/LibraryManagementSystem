@@ -1,0 +1,210 @@
+﻿@model LibraryManagementSystem.Models.BorrowingSetting
+
+@{
+    ViewData["Title"] = "Borrowing Settings";
+}
+
+<div class="dashboard-wrap">
+
+    <div class="dashboard-welcome">
+        <h2>Borrowing Settings</h2>
+        <p>Configure loan duration, fine rules, and member borrowing limits.</p>
+        <div class="welcome-date">
+            <i class="bi bi-gear me-1"></i>
+            Last updated: @Model.UpdatedDate.ToString("dd MMM yyyy, hh:mm tt")
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4">
+
+        <div class="col-lg-5">
+
+            <div class="lms-card h-100">
+                <div class="lms-card-header">
+                    <h3 class="lms-card-title">
+                        <i class="bi bi-info-circle"></i>
+                        Current Policy
+                    </h3>
+                </div>
+
+                <div class="lms-card-body">
+
+                    <div class="policy-item">
+                        <div class="policy-icon">
+                            <i class="bi bi-calendar-week"></i>
+                        </div>
+                        <div>
+                            <h4>@Model.LoanDurationDays days</h4>
+                            <p>Loan Duration</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <div class="policy-icon">
+                            <i class="bi bi-bookshelf"></i>
+                        </div>
+                        <div>
+                            <h4>@Model.MaxBooksPerMember books</h4>
+                            <p>Maximum Books Per Member</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <div class="policy-icon">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <div>
+                            <h4>@Model.FinePerDay.ToString("C")</h4>
+                            <p>Fine Per Day</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-item">
+                        <div class="policy-icon">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </div>
+                        <div>
+                            <h4>@Model.RenewalLimit time(s)</h4>
+                            <p>Renewal Limit</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-7">
+
+            <div class="lms-card">
+                <div class="lms-card-header">
+                    <h3 class="lms-card-title">
+                        <i class="bi bi-pencil-square"></i>
+                        Update Borrowing Rules
+                    </h3>
+                </div>
+
+                <div class="lms-card-body">
+
+                    <form asp-controller="BorrowingSetting" asp-action="Index" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="UpdatedDate" />
+
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="LoanDurationDays" class="form-label fw-semibold"></label>
+                            <input asp-for="LoanDurationDays" class="form-control form-control-lg" />
+                            <span asp-validation-for="LoanDurationDays" class="text-danger small"></span>
+                            <small class="text-muted">
+                                Number of days a member can keep a borrowed book.
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="MaxBooksPerMember" class="form-label fw-semibold"></label>
+                            <input asp-for="MaxBooksPerMember" class="form-control form-control-lg" />
+                            <span asp-validation-for="MaxBooksPerMember" class="text-danger small"></span>
+                            <small class="text-muted">
+                                Maximum active books a member can borrow at one time.
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FinePerDay" class="form-label fw-semibold"></label>
+                            <input asp-for="FinePerDay" class="form-control form-control-lg" />
+                            <span asp-validation-for="FinePerDay" class="text-danger small"></span>
+                            <small class="text-muted">
+                                Fine charged per day after the due date.
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="RenewalLimit" class="form-label fw-semibold"></label>
+                            <input asp-for="RenewalLimit" class="form-control form-control-lg" />
+                            <span asp-validation-for="RenewalLimit" class="text-danger small"></span>
+                            <small class="text-muted">
+                                Maximum number of times a borrowed book can be renewed.
+                            </small>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-lms-primary">
+                                <i class="bi bi-save me-1"></i>
+                                Save Settings
+                            </button>
+
+                            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i>
+                                Back to Dashboard
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+    .policy-item {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 0;
+        border-bottom: 1px solid #dbe7df;
+    }
+
+        .policy-item:last-child {
+            border-bottom: none;
+        }
+
+    .policy-icon {
+        width: 54px;
+        height: 54px;
+        border-radius: 16px;
+        background: #eaf5ef;
+        color: #2e7d5e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    .policy-item h4 {
+        margin: 0;
+        font-weight: 800;
+        color: #1f2d2a;
+    }
+
+    .policy-item p {
+        margin: 0;
+        color: #6c7a74;
+    }
+
+    .form-control:focus {
+        border-color: #2e7d5e;
+        box-shadow: 0 0 0 0.15rem rgba(46, 125, 94, 0.15);
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
