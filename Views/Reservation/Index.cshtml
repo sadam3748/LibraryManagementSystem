@@ -13,7 +13,7 @@
 
     <div class="dashboard-welcome">
         <h2>Book Reservations</h2>
-        <p>Manage member reservation requests for currently unavailable books.</p>
+        <p>Manage member reservation requests. When a reserved book becomes available, admin can approve it and issue the book to the member.</p>
         <div class="welcome-date">
             <i class="bi bi-calendar-event me-1"></i>
             @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
@@ -40,58 +40,50 @@
 
     <div class="row g-4 mb-4">
 
-        <div class="col-xl-3 col-md-6">
-            <div class="lms-card h-100">
-                <div class="lms-card-body d-flex align-items-center gap-3">
-                    <div class="stat-icon-box bg-primary-soft">
-                        <i class="bi bi-bookmark"></i>
-                    </div>
-                    <div>
-                        <h3 class="mb-1 fw-bold">@totalReservations</h3>
-                        <p class="text-muted mb-0">Total Reservations</p>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 reservation-kpi-card">
+                <div class="stat-icon-box bg-primary-soft">
+                    <i class="bi bi-bookmark"></i>
+                </div>
+                <div>
+                    <h3>@totalReservations</h3>
+                    <p>Total Reservations</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="lms-card h-100">
-                <div class="lms-card-body d-flex align-items-center gap-3">
-                    <div class="stat-icon-box bg-warning-soft">
-                        <i class="bi bi-hourglass-split"></i>
-                    </div>
-                    <div>
-                        <h3 class="mb-1 fw-bold">@pendingReservations</h3>
-                        <p class="text-muted mb-0">Pending</p>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 reservation-kpi-card">
+                <div class="stat-icon-box bg-warning-soft">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div>
+                    <h3>@pendingReservations</h3>
+                    <p>Pending</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="lms-card h-100">
-                <div class="lms-card-body d-flex align-items-center gap-3">
-                    <div class="stat-icon-box bg-success-soft">
-                        <i class="bi bi-check-circle"></i>
-                    </div>
-                    <div>
-                        <h3 class="mb-1 fw-bold">@approvedReservations</h3>
-                        <p class="text-muted mb-0">Approved</p>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 reservation-kpi-card">
+                <div class="stat-icon-box bg-success-soft">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div>
+                    <h3>@approvedReservations</h3>
+                    <p>Approved / Issued</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-xl-3 col-md-6">
-            <div class="lms-card h-100">
-                <div class="lms-card-body d-flex align-items-center gap-3">
-                    <div class="stat-icon-box bg-danger-soft">
-                        <i class="bi bi-x-circle"></i>
-                    </div>
-                    <div>
-                        <h3 class="mb-1 fw-bold">@cancelledReservations</h3>
-                        <p class="text-muted mb-0">Cancelled</p>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 reservation-kpi-card">
+                <div class="stat-icon-box bg-danger-soft">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <div>
+                    <h3>@cancelledReservations</h3>
+                    <p>Cancelled</p>
                 </div>
             </div>
         </div>
@@ -184,56 +176,99 @@
                                     <td data-label="Status">
                                         @if (item.Status == "Approved")
                                         {
-                                            <span class="status-badge badge-available">Approved</span>
+                                            <span class="status-badge badge-available">
+                                                Approved / Issued
+                                            </span>
                                         }
                                         else if (item.Status == "Cancelled")
                                         {
-                                            <span class="status-badge badge-unavailable">Cancelled</span>
+                                            <span class="status-badge badge-unavailable">
+                                                Cancelled
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="status-badge badge-pending">Pending</span>
+                                            <span class="status-badge badge-pending">
+                                                Pending
+                                            </span>
                                         }
                                     </td>
 
                                     <td data-label="Book Availability">
                                         @if (item.Book?.IsAvailable == true)
                                         {
-                                            <span class="status-badge badge-available">Available</span>
+                                            <span class="status-badge badge-available">
+                                                Available
+                                            </span>
                                         }
                                         else
                                         {
-                                            <span class="status-badge badge-unavailable">Unavailable</span>
+                                            <span class="status-badge badge-unavailable">
+                                                Unavailable
+                                            </span>
                                         }
                                     </td>
 
                                     <td data-label="Action">
-                                        @if (item.Status == "Pending" && item.Book?.IsAvailable == true)
+                                        @if (item.Status == "Pending")
                                         {
-                                            <form asp-controller="Reservation"
-                                                  asp-action="ApproveReservation"
-                                                  method="post"
-                                                  onsubmit="return confirm('Approve this reservation?');">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="id" value="@item.Id" />
+                                            <div class="d-flex flex-wrap gap-2">
 
-                                                <button type="submit" class="btn btn-sm btn-lms-primary">
-                                                    <i class="bi bi-check-circle me-1"></i>
-                                                    Approve
-                                                </button>
-                                            </form>
+                                                @if (item.Book?.IsAvailable == true)
+                                                {
+                                                    <form asp-controller="Reservation"
+                                                          asp-action="ApproveReservation"
+                                                          method="post"
+                                                          onsubmit="return confirm('Approve this reservation and issue the book to this member?');">
+                                                        @Html.AntiForgeryToken()
+                                                        <input type="hidden" name="id" value="@item.Id" />
+
+                                                        <button type="submit" class="btn btn-sm btn-lms-primary">
+                                                            <i class="bi bi-check-circle me-1"></i>
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted small d-inline-flex align-items-center">
+                                                        <i class="bi bi-clock me-1"></i>
+                                                        Waiting for return
+                                                    </span>
+                                                }
+
+                                                <form asp-controller="Reservation"
+                                                      asp-action="CancelByAdmin"
+                                                      method="post"
+                                                      onsubmit="return confirm('Cancel this reservation?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.Id" />
+
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-x-circle me-1"></i>
+                                                        Cancel
+                                                    </button>
+                                                </form>
+
+                                            </div>
                                         }
-                                        else if (item.Status == "Pending")
+                                        else if (item.Status == "Approved")
                                         {
-                                            <span class="text-muted small">
-                                                Waiting for book return
+                                            <span class="text-success fw-semibold">
+                                                <i class="bi bi-check2-circle me-1"></i>
+                                                Issued
+                                            </span>
+                                        }
+                                        else if (item.Status == "Cancelled")
+                                        {
+                                            <span class="text-danger fw-semibold">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Cancelled
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="text-muted">
-                                                Completed
-                                            </span>
+                                            <span class="text-muted">Completed</span>
                                         }
                                     </td>
                                 </tr>
@@ -261,14 +296,34 @@
 </div>
 
 <style>
+    .reservation-kpi-card {
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+        .reservation-kpi-card h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1f2d2a;
+        }
+
+        .reservation-kpi-card p {
+            margin: 0;
+            color: #6c7a74;
+            font-weight: 600;
+        }
+
     .stat-icon-box {
-        width: 58px;
-        height: 58px;
-        border-radius: 16px;
+        width: 62px;
+        height: 62px;
+        border-radius: 18px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.6rem;
+        font-size: 1.7rem;
         flex-shrink: 0;
     }
 
