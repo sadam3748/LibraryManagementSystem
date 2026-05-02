@@ -31,18 +31,25 @@ namespace LibraryManagementSystem.Controllers
 
             var totalBooks = await _context.Books.CountAsync();
 
+            var totalTransactions = await _context.BorrowTransactions
+                .CountAsync();
+
             var activeBorrowings = await _context.BorrowTransactions
                 .CountAsync(t => t.Status == "Borrowed");
+
+            var returnedBooks = await _context.BorrowTransactions
+                .CountAsync(t => t.Status == "Returned");
 
             var overdueCount = await _context.BorrowTransactions
                 .CountAsync(t =>
                     t.Status == "Borrowed" &&
                     t.DueDate.Date < DateTime.Now.Date);
 
+            var totalReservations = await _context.Reservations
+                .CountAsync();
+
             var pendingReservations = await _context.Reservations
                 .CountAsync(r => r.Status == "Pending");
-
-            ViewBag.PendingReservations = pendingReservations;
 
             var recentTransactions = await _context.BorrowTransactions
                 .Include(t => t.Book)
@@ -53,8 +60,15 @@ namespace LibraryManagementSystem.Controllers
 
             ViewBag.TotalBooks = totalBooks;
             ViewBag.TotalMembers = members.Count;
+
+            ViewBag.TotalTransactions = totalTransactions;
             ViewBag.ActiveBorrowings = activeBorrowings;
+            ViewBag.ReturnedBooks = returnedBooks;
             ViewBag.OverdueCount = overdueCount;
+
+            ViewBag.TotalReservations = totalReservations;
+            ViewBag.PendingReservations = pendingReservations;
+
             ViewBag.RecentTransactions = recentTransactions;
 
             return View();

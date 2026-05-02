@@ -202,6 +202,18 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound();
             }
 
+            bool hasBorrowTransactions = await _context.BorrowTransactions
+                .AnyAsync(t => t.BookId == id);
+
+            bool hasReservations = await _context.Reservations
+                .AnyAsync(r => r.BookId == id);
+
+            if (hasBorrowTransactions || hasReservations)
+            {
+                TempData["ErrorMessage"] = "This book cannot be deleted because it has borrowing or reservation history. You can edit the book details instead.";
+                return RedirectToAction(nameof(Index));
+            }
+
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
 

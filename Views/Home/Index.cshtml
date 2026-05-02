@@ -85,7 +85,7 @@
                                     <th>#</th>
                                     <th>Student Name</th>
                                     <th>Student ID</th>
-                                    <th>Role</th>
+                                    <th>Role / Responsibility</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,45 +93,48 @@
                                     <td data-label="#">1</td>
                                     <td data-label="Name">
                                         <i class="bi bi-person-circle me-2 text-green"></i>
-                                        <strong>Member Name 1</strong>
+                                        <strong>Devraj</strong>
                                     </td>
                                     <td data-label="Student ID">
-                                        <span class="status-badge badge-available">BSCS-XXXX-001</span>
+                                        <span class="status-badge badge-available">STUDENT-ID-001</span>
                                     </td>
-                                    <td data-label="Role">Team Lead / Backend</td>
+                                    <td data-label="Role">Member A — Project Setup, Database, Models, ERD, and Backend Structure</td>
                                 </tr>
+
                                 <tr>
                                     <td data-label="#">2</td>
                                     <td data-label="Name">
                                         <i class="bi bi-person-circle me-2 text-green"></i>
-                                        <strong>Member Name 2</strong>
+                                        <strong>Abrar</strong>
                                     </td>
                                     <td data-label="Student ID">
-                                        <span class="status-badge badge-available">BSCS-XXXX-002</span>
+                                        <span class="status-badge badge-available">STUDENT-ID-002</span>
                                     </td>
-                                    <td data-label="Role">Frontend / UI Design</td>
+                                    <td data-label="Role">Member B — Admin/Librarian Module, Book Management, Members, Returns, and Fines</td>
                                 </tr>
+
                                 <tr>
                                     <td data-label="#">3</td>
                                     <td data-label="Name">
                                         <i class="bi bi-person-circle me-2 text-green"></i>
-                                        <strong>Member Name 3</strong>
+                                        <strong>Roman</strong>
                                     </td>
                                     <td data-label="Student ID">
-                                        <span class="status-badge badge-available">BSCS-XXXX-003</span>
+                                        <span class="status-badge badge-available">STUDENT-ID-003</span>
                                     </td>
-                                    <td data-label="Role">Database / EF Core</td>
+                                    <td data-label="Role">Member C — Member/Reader Module, Browse Books, Borrow, Reserve, Renew, and History</td>
                                 </tr>
+
                                 <tr>
                                     <td data-label="#">4</td>
                                     <td data-label="Name">
                                         <i class="bi bi-person-circle me-2 text-green"></i>
-                                        <strong>Member Name 4</strong>
+                                        <strong>Ahmad</strong>
                                     </td>
                                     <td data-label="Student ID">
-                                        <span class="status-badge badge-available">BSCS-XXXX-004</span>
+                                        <span class="status-badge badge-available">STUDENT-ID-004</span>
                                     </td>
-                                    <td data-label="Role">Reports / Testing</td>
+                                    <td data-label="Role">Member D — Login, Role-Based Access, Reports, UI Design, Testing, and Final Integration</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -165,7 +168,19 @@
                 {
                     <div class="col">
                         <div class="book-card">
-                            <div class="book-cover"><i class="bi bi-book"></i></div>
+                            <div class="book-cover">
+                                @if (!string.IsNullOrEmpty(book.CoverImagePath))
+                                {
+                                    <img src="@book.CoverImagePath"
+                                         alt="@book.Title cover"
+                                         class="book-cover-img" />
+                                }
+                                else
+                                {
+                                    <i class="bi bi-book"></i>
+                                }
+                            </div>
+
                             <div class="book-card-body">
                                 <div class="book-title">@book.Title</div>
                                 <div class="book-author">
@@ -177,6 +192,7 @@
                                     </span>
                                 </div>
                             </div>
+
                             <div class="book-card-footer">
                                 <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id"
                                    class="btn btn-lms-outline btn-sm flex-fill justify-content-center">
@@ -189,21 +205,66 @@
             }
             else
             {
-                @* Static placeholder cards *@
-                string[] titles  = { "The Great Gatsby", "1984", "To Kill a Mockingbird", "Brave New World", "Dune" };
-                string[] authors = { "F. Scott Fitzgerald", "George Orwell", "Harper Lee", "Aldous Huxley", "Frank Herbert" };
-                for (int i = 0; i < 5; i++)
+                @* Static placeholder cards with real book cover images *@
+                var books = new[]
+                {
+                        new
+                        {
+                        Title = "The Great Gatsby",
+                        Author = "F. Scott Fitzgerald",
+                        Cover = "https://covers.openlibrary.org/b/isbn/9780743273565-M.jpg"
+                        },
+                        new
+                        {
+                        Title = "1984",
+                        Author = "George Orwell",
+                        Cover = "https://covers.openlibrary.org/b/isbn/9780451524935-M.jpg"
+                        },
+                        new
+                        {
+                        Title = "To Kill a Mockingbird",
+                        Author = "Harper Lee",
+                        Cover = "https://covers.openlibrary.org/b/isbn/9780061120084-M.jpg"
+                        },
+                        new
+                        {
+                        Title = "Brave New World",
+                        Author = "Aldous Huxley",
+                        Cover = "https://covers.openlibrary.org/b/isbn/9780060850524-M.jpg"
+                        },
+                        new
+                        {
+                        Title = "Dune",
+                        Author = "Frank Herbert",
+                        Cover = "https://covers.openlibrary.org/b/isbn/9780441172719-M.jpg"
+                        }
+                        };
+
+                foreach (var book in books)
                 {
                     <div class="col">
                         <div class="book-card">
-                            <div class="book-cover"><i class="bi bi-book"></i></div>
+                            <div class="book-cover">
+                                <img src="@book.Cover"
+                                     alt="@book.Title cover"
+                                     class="book-cover-img"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+
+                                <div class="book-cover-fallback" style="display:none;">
+                                    <i class="bi bi-book"></i>
+                                </div>
+                            </div>
+
                             <div class="book-card-body">
-                                <div class="book-title">@titles[i]</div>
-                                <div class="book-author"><i class="bi bi-person-fill me-1"></i>@authors[i]</div>
+                                <div class="book-title">@book.Title</div>
+                                <div class="book-author">
+                                    <i class="bi bi-person-fill me-1"></i>@book.Author
+                                </div>
                                 <div class="book-meta">
                                     <span class="status-badge badge-available">Available</span>
                                 </div>
                             </div>
+
                             <div class="book-card-footer">
                                 <a asp-controller="Book" asp-action="Index"
                                    class="btn btn-lms-outline btn-sm flex-fill justify-content-center">

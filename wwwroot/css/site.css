@@ -2103,3 +2103,30 @@ textarea.form-control {
         margin-left: 0;
     }
 }
+
+
+.book-cover {
+    width: 100%;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f3f6f4;
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+}
+
+.book-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-cover-fallback {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    color: #6c757d;
+}
