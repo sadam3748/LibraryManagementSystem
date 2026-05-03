@@ -48,7 +48,12 @@
                     <p>Members</p>
                 </div>
             </div>
-        </div>
+         </div>
+
+        @*
+                 Hide this Menu for week 1
+                *@
+        <div style="display:none;">
 
         <div class="col-lg-4 col-md-6">
             <div class="lms-card h-100 kpi-card-clean">
@@ -98,6 +103,8 @@
             </div>
         </div>
 
+        </div>
+
     </div>
 
     <div class="lms-card mb-4">
@@ -139,6 +146,10 @@
                     </a>
                 </div>
 
+                @*
+                 Hide this Menu for week 1
+                *@
+                <div style="display:none;">
                 <div class="col-xl-3 col-md-4 col-sm-6">
                     <a asp-controller="BorrowTransaction" asp-action="Index" class="quick-action-box">
                         <i class="bi bi-arrow-left-right"></i>
@@ -165,6 +176,8 @@
                         <i class="bi bi-bar-chart"></i>
                         <span>Reports</span>
                     </a>
+                </div>
+
                 </div>
 
             </div>

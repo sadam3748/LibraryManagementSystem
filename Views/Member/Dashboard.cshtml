@@ -47,7 +47,10 @@
                 </div>
             </div>
         </div>
-
+        @*
+                 Hide this Menu for week 1
+                *@
+        <div style="display:none;">
         <div class="col-lg-6 col-md-6">
             <div class="lms-card h-100 kpi-card-clean">
                 <div class="stat-icon-box bg-danger-soft">
@@ -71,7 +74,7 @@
                 </div>
             </div>
         </div>
-
+        </div>
     </div>
 
     <div class="lms-card mb-4">
@@ -91,7 +94,10 @@
                         <span>Browse Books</span>
                     </a>
                 </div>
-
+                @*
+                 Hide this Menu for week 1
+                *@
+                <div style="display:none;">
                 <div class="col-lg-3 col-md-6">
                     <a asp-controller="BorrowTransaction" asp-action="MyBorrowings" class="quick-action-box">
                         <i class="bi bi-clock-history"></i>
@@ -111,6 +117,9 @@
                         <i class="bi bi-person-circle"></i>
                         <span>My Profile</span>
                     </a>
+                </div>
+
+
                 </div>
 
             </div>

@@ -95,6 +95,10 @@
                                 Members
                             </a>
                         </li>
+                        @*
+                 Hide this Menu for week 1
+                *@
+                        <div style="display:none;">
 
                         <li class="nav-item">
                             <a class="nav-link lms-nav-link" asp-controller="BorrowTransaction" asp-action="Index">
@@ -123,6 +127,8 @@
                                 Reports
                             </a>
                         </li>
+
+                </div>
                     }
 
                     @* MEMBER MENU *@
@@ -141,6 +147,10 @@
                                 Browse Books
                             </a>
                         </li>
+                @*
+                 Hide this Menu for week 1
+                *@
+                        <div style="display:none;">
 
                         <li class="nav-item">
                             <a class="nav-link lms-nav-link" asp-controller="BorrowTransaction" asp-action="MyBorrowings">
@@ -155,6 +165,8 @@
                                 My Reservations
                             </a>
                         </li>
+
+                        </div>
                     }
 
                 </ul>
@@ -225,7 +237,10 @@
                                             Dashboard
                                         </a>
                                     </li>
-
+                                @*
+                 Hide this Menu for week 1
+                *@
+                        <div style="display:none;">
                                     <li>
                                         <a class="dropdown-item" asp-controller="BorrowTransaction" asp-action="MyBorrowings">
                                             <i class="bi bi-clock-history me-2"></i>
@@ -239,6 +254,8 @@
                                             My Reservations
                                         </a>
                                     </li>
+
+                                    </div>
                                 }
 
                                 <li>
