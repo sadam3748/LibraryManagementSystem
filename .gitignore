@@ -1,0 +1,29 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build files
+bin/
+obj/
+
+# Logs
+*.log
+
+# NuGet
+packages/
+*.nupkg
+
+# Database local files
+*.mdf
+*.ldf
+*.db
+
+# Local settings / secrets
+appsettings.Development.json
+appsettings.Production.json
+.env
+
+# Publish / upload folders
+publish/
+wwwroot/uploads/
