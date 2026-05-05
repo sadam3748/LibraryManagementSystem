@@ -5,50 +5,93 @@
     var roles = ViewBag.Roles as IList<string>;
     var primaryRole = (roles != null && roles.Count > 0) ? roles[0] : "Member";
     bool isAdmin = User.IsInRole("Admin");
-    var initial = (!string.IsNullOrEmpty(Model.FullName)) ? Model.FullName[0].ToString().ToUpper() : "U";
+    var initial = (!string.IsNullOrEmpty(Model.FullName))
+                        ? Model.FullName[0].ToString().ToUpper()
+                        : "U";
+    var dashController = isAdmin ? "Admin" : "Member";
+    var dashIcon = isAdmin ? "bi-speedometer2" : "bi-house";
 }
 
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+                <h1 class="page-title">
+                    <i class="bi bi-person-circle me-2"></i>My Profile
+                </h1>
+                <p class="page-subtitle">View your account details and membership information</p>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a asp-controller="@dashController" asp-action="Dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">My Profile</li>
+                    </ol>
+                </nav>
+            </div>
+            <a asp-controller="@dashController" asp-action="Dashboard"
+               class="btn lms-btn-outline-nav d-none d-md-inline-flex">
+                <i class="bi @dashIcon me-1"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ── BODY ── -->
 <div class="dashboard-wrap">
-    <div class="container" style="max-width:700px;">
+    <div class="container" style="max-width: 720px;">
 
         @if (TempData["Success"] != null)
         {
-            <div class="lms-alert-success mb-3 d-flex align-items-center gap-2">
-                <i class="bi bi-check-circle-fill"></i>
+            <div class="lms-alert-success d-flex align-items-center gap-2 mb-4"
+                 style="border-radius: var(--radius-md);">
+                <i class="bi bi-check-circle-fill flex-shrink-0"></i>
                 <span>@TempData["Success"]</span>
             </div>
         }
 
-        <div class="lms-card">
+        <!-- ── PROFILE CARD ── -->
+        <div class="lms-card mb-4">
 
-            {{!-- Green Gradient Header --}}
+            <!-- Green gradient header -->
             <div class="profile-card-head">
                 <div class="profile-avatar-circle">@initial</div>
-                <div>
+                <div class="flex-grow-1">
                     <h3 class="profile-display-name">@Model.FullName</h3>
-                    @if (isAdmin)
-                    {
-                        <span class="lms-role-badge admin-badge">
-                            <i class="bi bi-shield-fill-check me-1"></i>Admin
+                    <div class="d-flex align-items-center gap-2 flex-wrap mt-1">
+                        @if (isAdmin)
+                        {
+                            <span class="lms-role-badge admin-badge">
+                                <i class="bi bi-shield-fill-check me-1"></i>Administrator
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="lms-role-badge member-badge">
+                                <i class="bi bi-person-check-fill me-1"></i>Library Member
+                            </span>
+                        }
+                        <span style="font-size:.75rem; color:rgba(255,255,255,.55);">
+                            <i class="bi bi-clock me-1"></i>
+                            Joined @DateTime.Now.Year
                         </span>
-                    }
-                    else
-                    {
-                        <span class="lms-role-badge member-badge">
-                            <i class="bi bi-person-check-fill me-1"></i>Member
-                        </span>
-                    }
+                    </div>
                 </div>
             </div>
 
-        @*     {{!-- White Body --}} *@
+            <!-- Card body -->
             <div class="lms-card-body">
 
-                <h5 class="lms-card-title mb-4 pb-2" style="border-bottom:1px solid var(--grey-200); font-size:.93rem;">
-                    <i class="bi bi-person-lines-fill"></i> Account Information
+                <!-- Section: Account Information -->
+                <h5 class="lms-card-title mb-3 pb-2" style="border-bottom: 1px solid var(--grey-200);">
+                    <i class="bi bi-person-lines-fill"></i>Account Information
                 </h5>
 
-                <div class="profile-info-grid">
+                <div class="profile-info-grid mb-4">
 
                     <div class="profile-info-row">
                         <span class="profile-info-label">
@@ -59,7 +102,7 @@
 
                     <div class="profile-info-row">
                         <span class="profile-info-label">
-                            <i class="bi bi-envelope me-2 text-green"></i>Email
+                            <i class="bi bi-envelope me-2 text-green"></i>Email Address
                         </span>
                         <span class="profile-info-value">@Model.Email</span>
                     </div>
@@ -71,7 +114,7 @@
                         <span class="profile-info-value">@Model.UserName</span>
                     </div>
 
-                    <div class="profile-info-row" style="border-bottom:none;">
+                    <div class="profile-info-row" style="border-bottom: none;">
                         <span class="profile-info-label">
                             <i class="bi bi-shield me-2 text-green"></i>Role
                         </span>
@@ -79,43 +122,126 @@
                             @if (isAdmin)
                             {
                                 <span class="lms-role-badge admin-badge">
-                                    <i class="bi bi-shield-fill-check me-1"></i>Admin
+                                    <i class="bi bi-shield-fill-check me-1"></i>Administrator
                                 </span>
                             }
                             else
                             {
                                 <span class="lms-role-badge member-badge">
-                                    <i class="bi bi-person-check-fill me-1"></i>Member
+                                    <i class="bi bi-person-check-fill me-1"></i>Library Member
                                 </span>
                             }
                         </span>
                     </div>
 
                 </div>
-@* 
-                {{!-- Actions --}} *@
-                <div class="d-flex flex-wrap gap-2 mt-4 pt-3" style="border-top:1px solid var(--grey-200);">
-                    @if (isAdmin)
+
+                <!-- Section: Account Status -->
+                <h5 class="lms-card-title mb-3 pb-2 mt-4" style="border-bottom: 1px solid var(--grey-200);">
+                    <i class="bi bi-patch-check-fill"></i>Account Status
+                </h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-sm-4">
+                        <div class="profile-status-tile">
+                            <div class="profile-status-icon" style="background: var(--success-pale); color: var(--success);">
+                                <i class="bi bi-check-circle-fill"></i>
+                            </div>
+                            <div>
+                                <div class="profile-status-label">Account</div>
+                                <div class="profile-status-value" style="color: var(--success);">Active</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="profile-status-tile">
+                            <div class="profile-status-icon" style="background: var(--info-pale); color: var(--info);">
+                                <i class="bi bi-envelope-check-fill"></i>
+                            </div>
+                            <div>
+                                <div class="profile-status-label">Email</div>
+                                <div class="profile-status-value" style="color: var(--info);">Verified</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="profile-status-tile">
+                            <div class="profile-status-icon"
+                                 style="background: @(isAdmin ? "var(--gold-pale)" : "var(--green-pale)");
+                                        color: @(isAdmin ? "var(--gold)" : "var(--green)");">
+                                <i class="bi @(isAdmin ? "bi-star-fill" : "bi-people-fill")"></i>
+                            </div>
+                            <div>
+                                <div class="profile-status-label">Membership</div>
+                                <div class="profile-status-value"
+                                     style="color: @(isAdmin ? "var(--gold)" : "var(--green)");">
+                                    @primaryRole
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex flex-wrap gap-2 pt-3"
+                     style="border-top: 1px solid var(--grey-200);">
+                    <a asp-controller="@dashController" asp-action="Dashboard"
+                       class="btn btn-lms-primary">
+                        <i class="bi @dashIcon me-1"></i>Back to Dashboard
+                    </a>
+
+                    @if (!isAdmin)
                     {
-                        <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-lms-primary">
-                            <i class="bi bi-speedometer2"></i> Back to Dashboard
+                        <a asp-controller="Book" asp-action="Index"
+                           class="btn btn-lms-outline">
+                            <i class="bi bi-search me-1"></i>Browse Books
                         </a>
                     }
                     else
                     {
-                        <a asp-controller="Member" asp-action="Dashboard" class="btn btn-lms-primary">
-                            <i class="bi bi-house"></i> Back to Dashboard
+                        <a asp-controller="Admin" asp-action="CreateMember"
+                           class="btn btn-lms-secondary">
+                            <i class="bi bi-person-plus me-1"></i>Add Member
                         </a>
                     }
 
-                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                    <form asp-controller="Account" asp-action="Logout"
+                          method="post" class="d-inline ms-auto">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-lms-danger">
-                            <i class="bi bi-box-arrow-right"></i> Sign Out
+                            <i class="bi bi-box-arrow-right me-1"></i>Sign Out
                         </button>
                     </form>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- ── SECURITY NOTICE CARD ── -->
+        <div class="lms-card">
+            <div class="lms-card-header">
+                <h5 class="lms-card-title">
+                    <i class="bi bi-lock-fill"></i>Account Security
+                </h5>
+            </div>
+            <div class="lms-card-body">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="stat-icon flex-shrink-0"
+                         style="width:42px; height:42px; background:var(--warning-pale);
+                                color:var(--warning); border-radius:var(--radius-md);
+                                display:grid; place-items:center; font-size:1.1rem;">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <div>
+                        <p class="mb-1" style="font-size:.88rem; font-weight:600; color:var(--navy);">
+                            Keep your account secure
+                        </p>
+                        <p class="mb-0" style="font-size:.82rem; color:var(--grey-600);">
+                            Never share your password with anyone. If you suspect unauthorised access,
+                            sign out immediately and contact your library administrator.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem.Controllers
 {
-    [Authorize]
     public class BookController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,17 +15,64 @@ namespace LibraryManagementSystem.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        // GET: /Book
+        // Admin and members can browse books
+        [HttpGet]
+        public async Task<IActionResult> Index(string? searchString, string? genre, string? availability)
         {
-            var books = await _context.Books.ToListAsync();
+            var booksQuery = _context.Books.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchString))
+            {
+                booksQuery = booksQuery.Where(b =>
+                    b.Title.Contains(searchString) ||
+                    b.Author.Contains(searchString) ||
+                    b.ISBN.Contains(searchString) ||
+                    b.Genre.Contains(searchString) ||
+                    b.Publisher.Contains(searchString));
+            }
+
+            if (!string.IsNullOrWhiteSpace(genre))
+            {
+                booksQuery = booksQuery.Where(b => b.Genre == genre);
+            }
+
+            if (!string.IsNullOrWhiteSpace(availability))
+            {
+                if (availability == "Available")
+                {
+                    booksQuery = booksQuery.Where(b => b.IsAvailable);
+                }
+                else if (availability == "Unavailable")
+                {
+                    booksQuery = booksQuery.Where(b => !b.IsAvailable);
+                }
+            }
+
+            var books = await booksQuery
+                .OrderBy(b => b.Title)
+                .ToListAsync();
+
+            ViewBag.SearchString = searchString;
+            ViewBag.SelectedGenre = genre;
+            ViewBag.SelectedAvailability = availability;
+
+            ViewBag.Genres = await _context.Books
+                .Where(b => !string.IsNullOrEmpty(b.Genre))
+                .Select(b => b.Genre)
+                .Distinct()
+                .OrderBy(g => g)
+                .ToListAsync();
+
             return View(books);
         }
 
-        [AllowAnonymous]
+        // GET: /Book/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            var book = await _context.Books
+                .FirstOrDefaultAsync(b => b.Id == id);
 
             if (book == null)
             {
@@ -36,25 +82,38 @@ namespace LibraryManagementSystem.Controllers
             return View(book);
         }
 
+        // GET: /Book/Create
+        // Only admin can add books
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
+        // POST: /Book/Create
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Book book)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Books.Add(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(book);
             }
 
-            return View(book);
+            book.CreatedDate = DateTime.Now;
+
+            _context.Books.Add(book);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Book added successfully.";
+            return RedirectToAction(nameof(Index));
         }
 
+        // GET: /Book/Edit/5
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var book = await _context.Books.FindAsync(id);
@@ -67,6 +126,8 @@ namespace LibraryManagementSystem.Controllers
             return View(book);
         }
 
+        // POST: /Book/Edit/5
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Book book)
@@ -76,19 +137,49 @@ namespace LibraryManagementSystem.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Update(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(book);
             }
 
-            return View(book);
+            try
+            {
+                var existingBook = await _context.Books
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(b => b.Id == id);
+
+                if (existingBook == null)
+                {
+                    return NotFound();
+                }
+
+                book.CreatedDate = existingBook.CreatedDate;
+
+                _context.Update(book);
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessMessage"] = "Book updated successfully.";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await BookExists(book.Id))
+                {
+                    return NotFound();
+                }
+
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
+        // GET: /Book/Delete/5
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            var book = await _context.Books
+                .FirstOrDefaultAsync(b => b.Id == id);
 
             if (book == null)
             {
@@ -98,19 +189,41 @@ namespace LibraryManagementSystem.Controllers
             return View(book);
         }
 
+        // POST: /Book/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var book = await _context.Books.FindAsync(id);
 
-            if (book != null)
+            if (book == null)
             {
-                _context.Books.Remove(book);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
 
+            bool hasBorrowTransactions = await _context.BorrowTransactions
+                .AnyAsync(t => t.BookId == id);
+
+            bool hasReservations = await _context.Reservations
+                .AnyAsync(r => r.BookId == id);
+
+            if (hasBorrowTransactions || hasReservations)
+            {
+                TempData["ErrorMessage"] = "This book cannot be deleted because it has borrowing or reservation history. You can edit the book details instead.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Book deleted successfully.";
             return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<bool> BookExists(int id)
+        {
+            return await _context.Books.AnyAsync(e => e.Id == id);
         }
     }
 }

@@ -95,10 +95,6 @@
                                 Members
                             </a>
                         </li>
-                        @*
-                 Hide this Menu for week 1
-                *@
-                        <div style="display:none;">
 
                         <li class="nav-item">
                             <a class="nav-link lms-nav-link" asp-controller="BorrowTransaction" asp-action="Index">
@@ -127,8 +123,6 @@
                                 Reports
                             </a>
                         </li>
-
-                </div>
                     }
 
                     @* MEMBER MENU *@
@@ -147,10 +141,6 @@
                                 Browse Books
                             </a>
                         </li>
-                @*
-                 Hide this Menu for week 1
-                *@
-                        <div style="display:none;">
 
                         <li class="nav-item">
                             <a class="nav-link lms-nav-link" asp-controller="BorrowTransaction" asp-action="MyBorrowings">
@@ -165,14 +155,12 @@
                                 My Reservations
                             </a>
                         </li>
-
-                        </div>
                     }
 
                 </ul>
 
                 <!-- RIGHT ACCOUNT MENU -->
-                <ul class="navbar-nav ms-auto align-items-lg-center">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
@@ -237,10 +225,7 @@
                                             Dashboard
                                         </a>
                                     </li>
-                                @*
-                 Hide this Menu for week 1
-                *@
-                        <div style="display:none;">
+
                                     <li>
                                         <a class="dropdown-item" asp-controller="BorrowTransaction" asp-action="MyBorrowings">
                                             <i class="bi bi-clock-history me-2"></i>
@@ -254,8 +239,6 @@
                                             My Reservations
                                         </a>
                                     </li>
-
-                                    </div>
                                 }
 
                                 <li>

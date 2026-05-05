@@ -1,428 +1,514 @@
+@using LibraryManagementSystem.Models
+@using LibraryManagementSystem.Controllers
+
 @{
-    ViewData["Title"] = "Library Reports";
-    /*
-     * Optional ViewBag values your ReportsController can pass:
-     *   ViewBag.TotalBooks       (int)
-     *   ViewBag.TotalMembers     (int)
-     *   ViewBag.TotalBorrowings  (int)
-     *   ViewBag.OverdueCount     (int)
-     *   ViewBag.ReturnedCount    (int)
-     *   ViewBag.TopBooks         (IEnumerable<Book>)
-     *   ViewBag.RecentReturns    (IEnumerable<BorrowTransaction>)
-     * All cards fall back to placeholders if null.
-     */
+    ViewData["Title"] = "Reports";
+
+    var totalBooks = ViewBag.TotalBooks ?? 0;
+    var availableBooks = ViewBag.AvailableBooks ?? 0;
+    var unavailableBooks = ViewBag.UnavailableBooks ?? 0;
+    var totalMembers = ViewBag.TotalMembers ?? 0;
+    var totalTransactions = ViewBag.TotalTransactions ?? 0;
+    var activeLoans = ViewBag.ActiveLoans ?? 0;
+    var returnedBooks = ViewBag.ReturnedBooks ?? 0;
+    var overdueBooks = ViewBag.OverdueBooks ?? 0;
+    var totalFineAmount = ViewBag.TotalFineAmount ?? 0;
+
+    var totalReservations = ViewBag.TotalReservations ?? 0;
+    var pendingReservations = ViewBag.PendingReservations ?? 0;
+    var approvedReservations = ViewBag.ApprovedReservations ?? 0;
+    var cancelledReservations = ViewBag.CancelledReservations ?? 0;
+
+    var recentTransactions = ViewBag.RecentTransactions as List<BorrowTransaction> ?? new List<BorrowTransaction>();
+    var recentReservations = ViewBag.RecentReservations as List<Reservation> ?? new List<Reservation>();
+    var mostBorrowedBooks = ViewBag.MostBorrowedBooks as List<MostBorrowedBookReportViewModel> ?? new List<MostBorrowedBookReportViewModel>();
 }
 
-<!-- Page Header -->
-<div class="page-header">
-    <div class="container-fluid px-4">
-        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
-            <div>
-                <h1 class="page-title">
-                    <i class="bi bi-bar-chart-line me-2"></i>Library Reports
-                </h1>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            <a asp-controller="Admin" asp-action="Dashboard">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active">Reports</li>
-                    </ol>
-                </nav>
-            </div>
-            <button class="btn d-none d-md-inline-flex"
-                    style="border:1.5px solid rgba(255,255,255,.4);color:#fff;padding:.32rem .9rem;"
-                    onclick="window.print()">
-                <i class="bi bi-printer me-1"></i>Print
-            </button>
-        </div>
-    </div>
-</div>
+<div class="dashboard-wrap">
 
-<div class="container-fluid px-4 pb-4">
-
-    <!-- ── SUMMARY STATS ── -->
-    <div class="row g-3 mb-4">
-        <div class="col-6 col-md-4 col-xl-2">
-            <div class="stat-box navy">
-                <div class="stat-icon"><i class="bi bi-book-fill"></i></div>
-                <div class="stat-data">
-                    <div class="stat-number">@(ViewBag.TotalBooks ?? 0)</div>
-                    <div class="stat-label">Total Books</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <div class="stat-box green">
-                <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
-                <div class="stat-data">
-                    <div class="stat-number">@(ViewBag.TotalMembers ?? 0)</div>
-                    <div class="stat-label">Members</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <div class="stat-box info">
-                <div class="stat-icon"><i class="bi bi-arrow-left-right"></i></div>
-                <div class="stat-data">
-                    <div class="stat-number">@(ViewBag.TotalBorrowings ?? 0)</div>
-                    <div class="stat-label">All Borrowings</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <div class="stat-box green">
-                <div class="stat-icon"><i class="bi bi-arrow-return-left"></i></div>
-                <div class="stat-data">
-                    <div class="stat-number">@(ViewBag.ReturnedCount ?? 0)</div>
-                    <div class="stat-label">Returned</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <div class="stat-box danger">
-                <div class="stat-icon"><i class="bi bi-exclamation-triangle-fill"></i></div>
-                <div class="stat-data">
-                    <div class="stat-number">@(ViewBag.OverdueCount ?? 0)</div>
-                    <div class="stat-label">Overdue</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 col-md-4 col-xl-2">
-            <div class="stat-box gold">
-                <div class="stat-icon"><i class="bi bi-bookmark-check-fill"></i></div>
-                <div class="stat-data">
-                    <div class="stat-number">
-                        @((int)(ViewBag.TotalBorrowings ?? 0) - (int)(ViewBag.ReturnedCount ?? 0))
-                    </div>
-                    <div class="stat-label">Active Loans</div>
-                </div>
-            </div>
+    <div class="dashboard-welcome">
+        <h2>Library Reports</h2>
+        <p>View overall library performance, book availability, transactions, reservations, and fine summary.</p>
+        <div class="welcome-date">
+            <i class="bi bi-calendar-event me-1"></i>
+            @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
         </div>
     </div>
 
-    <!-- ── REPORT CARDS ROW 1 ── -->
-    <div class="row g-3 mb-4">
+    <div class="row g-4 mb-4">
 
-        <!-- Books Overview -->
-        <div class="col-md-6 col-xl-3">
-            <div class="report-card">
-                <div class="report-card-top">
-                    <div class="report-icon"
-                         style="background:rgba(26,39,68,.08);color:var(--navy);">
-                        <i class="bi bi-book-fill"></i>
-                    </div>
-                    <div>
-                        <div class="report-title">Books Overview</div>
-                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
-                            Catalog summary
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-success-soft">
+                    <i class="bi bi-book"></i>
                 </div>
-                <div class="report-card-body">
-                    <div class="report-stat-row">
-                        <div class="report-mini">
-                            <div class="val">@(ViewBag.TotalBooks ?? 0)</div>
-                            <div class="lbl">Total</div>
-                        </div>
-                        <div class="report-mini">
-                            <div class="val" style="color:var(--success);">
-                                @((int)(ViewBag.TotalBooks ?? 0) - (int)(ViewBag.OverdueCount ?? 0))
-                            </div>
-                            <div class="lbl">Available</div>
-                        </div>
-                    </div>
-                    <a asp-controller="Book" asp-action="Index"
-                       class="btn btn-lms-outline btn-sm w-100 mt-2">
-                        <i class="bi bi-eye me-1"></i>View All Books
-                    </a>
+                <div>
+                    <h3>@totalBooks</h3>
+                    <p>Total Books</p>
                 </div>
             </div>
         </div>
 
-        <!-- Member Overview -->
-        <div class="col-md-6 col-xl-3">
-            <div class="report-card">
-                <div class="report-card-top">
-                    <div class="report-icon"
-                         style="background:var(--green-pale);color:var(--green);">
-                        <i class="bi bi-people-fill"></i>
-                    </div>
-                    <div>
-                        <div class="report-title">Member Overview</div>
-                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
-                            Registered members
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-success-soft">
+                    <i class="bi bi-check-circle"></i>
                 </div>
-                <div class="report-card-body">
-                    <div class="report-stat-row">
-                        <div class="report-mini">
-                            <div class="val">@(ViewBag.TotalMembers ?? 0)</div>
-                            <div class="lbl">Total</div>
-                        </div>
-                        <div class="report-mini">
-                            <div class="val" style="color:var(--green);">Active</div>
-                            <div class="lbl">Status</div>
-                        </div>
-                    </div>
-                    <a asp-controller="Admin" asp-action="Dashboard"
-                       class="btn btn-lms-outline btn-sm w-100 mt-2">
-                        <i class="bi bi-speedometer2 me-1"></i>Dashboard
-                    </a>
+                <div>
+                    <h3>@availableBooks</h3>
+                    <p>Available Books</p>
                 </div>
             </div>
         </div>
 
-        <!-- Borrowings Overview -->
-        <div class="col-md-6 col-xl-3">
-            <div class="report-card">
-                <div class="report-card-top">
-                    <div class="report-icon"
-                         style="background:var(--info-pale);color:var(--info);">
-                        <i class="bi bi-arrow-left-right"></i>
-                    </div>
-                    <div>
-                        <div class="report-title">Borrowings</div>
-                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
-                            All-time transactions
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-danger-soft">
+                    <i class="bi bi-x-circle"></i>
                 </div>
-                <div class="report-card-body">
-                    <div class="report-stat-row">
-                        <div class="report-mini">
-                            <div class="val">@(ViewBag.TotalBorrowings ?? 0)</div>
-                            <div class="lbl">Total</div>
-                        </div>
-                        <div class="report-mini">
-                            <div class="val" style="color:var(--success);">
-                                @(ViewBag.ReturnedCount ?? 0)
-                            </div>
-                            <div class="lbl">Returned</div>
-                        </div>
-                    </div>
-                    <a asp-controller="BorrowTransaction" asp-action="Index"
-                       class="btn btn-lms-outline btn-sm w-100 mt-2">
-                        <i class="bi bi-list-check me-1"></i>View Transactions
-                    </a>
+                <div>
+                    <h3>@unavailableBooks</h3>
+                    <p>Unavailable Books</p>
                 </div>
             </div>
         </div>
 
-        <!-- Overdue Report -->
-        <div class="col-md-6 col-xl-3">
-            <div class="report-card" style="border-left:3px solid var(--danger);">
-                <div class="report-card-top">
-                    <div class="report-icon"
-                         style="background:var(--danger-pale);color:var(--danger);">
-                        <i class="bi bi-alarm-fill"></i>
-                    </div>
-                    <div>
-                        <div class="report-title">Overdue Books</div>
-                        <div class="report-desc" style="font-size:.75rem;color:var(--grey-500);">
-                            Past due date
-                        </div>
-                    </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-primary-soft">
+                    <i class="bi bi-people"></i>
                 </div>
-                <div class="report-card-body">
-                    <div class="report-stat-row">
-                        <div class="report-mini">
-                            <div class="val" style="color:var(--danger);">
-                                @(ViewBag.OverdueCount ?? 0)
-                            </div>
-                            <div class="lbl">Overdue</div>
-                        </div>
-                        <div class="report-mini">
-                            <div class="val" style="color:var(--warning);">
-                                @((int)(ViewBag.TotalBorrowings ?? 0) - (int)(ViewBag.ReturnedCount ?? 0) - (int)(ViewBag.OverdueCount ?? 0))
-                            </div>
-                            <div class="lbl">On Loan</div>
-                        </div>
-                    </div>
-                    <a asp-controller="BorrowTransaction" asp-action="Index"
-                       class="btn btn-lms-danger btn-sm w-100 mt-2">
-                        <i class="bi bi-eye me-1"></i>View Overdue
-                    </a>
+                <div>
+                    <h3>@totalMembers</h3>
+                    <p>Total Members</p>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- ── TOP BOOKS TABLE ── -->
-    <div class="row g-3 mb-4">
-        <div class="col-lg-7">
-            <div class="lms-table-wrapper">
-                <div class="lms-table-header">
-                    <h5 class="lms-table-title">
-                        <i class="bi bi-trophy-fill" style="color:var(--gold);"></i>
-                        Top Books in Catalog
-                    </h5>
-                    <a asp-controller="Book" asp-action="Index"
-                       class="btn btn-lms-outline btn-sm">All Books</a>
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-primary-soft">
+                    <i class="bi bi-arrow-left-right"></i>
                 </div>
+                <div>
+                    <h3>@totalTransactions</h3>
+                    <p>Total Transactions</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-success-soft">
+                    <i class="bi bi-journal-check"></i>
+                </div>
+                <div>
+                    <h3>@activeLoans</h3>
+                    <p>Active Loans</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-success-soft">
+                    <i class="bi bi-check2-square"></i>
+                </div>
+                <div>
+                    <h3>@returnedBooks</h3>
+                    <p>Returned Books</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-danger-soft">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <div>
+                    <h3>@overdueBooks</h3>
+                    <p>Overdue Books</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-primary-soft">
+                    <i class="bi bi-bookmark-check"></i>
+                </div>
+                <div>
+                    <h3>@totalReservations</h3>
+                    <p>Total Reservations</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-warning-soft">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div>
+                    <h3>@pendingReservations</h3>
+                    <p>Pending Reservations</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-success-soft">
+                    <i class="bi bi-bookmark-check-fill"></i>
+                </div>
+                <div>
+                    <h3>@approvedReservations</h3>
+                    <p>Approved Reservations</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="lms-card h-100 report-kpi-card">
+                <div class="stat-icon-box bg-danger-soft">
+                    <i class="bi bi-bookmark-x"></i>
+                </div>
+                <div>
+                    <h3>@cancelledReservations</h3>
+                    <p>Cancelled Reservations</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-4">
+            <div class="lms-card h-100">
+                <div class="lms-card-header">
+                    <h3 class="lms-card-title">
+                        <i class="bi bi-cash-coin"></i>
+                        Fine Summary
+                    </h3>
+                </div>
+                <div class="lms-card-body">
+                    <h2 class="fw-bold text-danger mb-2">
+                        @Convert.ToDecimal(totalFineAmount).ToString("C")
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Total fine amount recorded from overdue or returned transactions.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="lms-card h-100">
+                <div class="lms-card-header">
+                    <h3 class="lms-card-title">
+                        <i class="bi bi-bar-chart-line"></i>
+                        Most Borrowed Books
+                    </h3>
+                </div>
+
+                <div class="lms-card-body">
+                    @if (mostBorrowedBooks.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="lms-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Book</th>
+                                        <th>Author</th>
+                                        <th>Borrow Count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        int mostCounter = 1;
+                                    }
+
+                                    @foreach (var item in mostBorrowedBooks)
+                                    {
+                                        <tr>
+                                            <td>@mostCounter</td>
+                                            <td><strong>@item.BookTitle</strong></td>
+                                            <td>@item.BookAuthor</td>
+                                            <td>
+                                                <span class="status-badge badge-available">
+                                                    @item.BorrowCount time(s)
+                                                </span>
+                                            </td>
+                                        </tr>
+
+                                        mostCounter++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-bar-chart text-muted" style="font-size: 2.5rem;"></i>
+                            <h5 class="mt-3">No Borrowing Data</h5>
+                            <p class="text-muted mb-0">Most borrowed books will appear after transactions are recorded.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="lms-card mb-4">
+        <div class="lms-card-header">
+            <h3 class="lms-card-title">
+                <i class="bi bi-clock-history"></i>
+                Recent Borrow Transactions
+            </h3>
+
+            <a asp-controller="BorrowTransaction" asp-action="Index" class="btn btn-lms-outline">
+                View All
+            </a>
+        </div>
+
+        <div class="lms-card-body">
+            @if (recentTransactions.Any())
+            {
                 <div class="table-responsive">
                     <table class="lms-table">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Title</th>
-                                <th>Author</th>
-                                <th>Genre</th>
+                                <th>Book</th>
+                                <th>Member</th>
+                                <th>Borrow Date</th>
+                                <th>Due Date</th>
                                 <th>Status</th>
-                                <th></th>
+                                <th>Fine</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if (ViewBag.TopBooks != null)
-                            {
-                                int rank = 1;
-                                foreach (var book in ViewBag.TopBooks)
-                                {
-                                    <tr>
-                                        <td data-label="#">
-                                            <span class="status-badge @(rank <= 3 ? "badge-reserved" : "badge-returned")">
-                                                #@rank
-                                            </span>
-                                        </td>
-                                        <td data-label="Title"><strong>@book.Title</strong></td>
-                                        <td data-label="Author">@book.Author</td>
-                                        <td data-label="Genre">@book.Genre</td>
-                                        <td data-label="Status">
-                                            @if (book.IsAvailable)
-                                            {
-                                                <span class="status-badge badge-available">Available</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="status-badge badge-borrowed">Borrowed</span>
-                                            }
-                                        </td>
-                                        <td>
-                                            <a asp-controller="Book" asp-action="Details"
-                                               asp-route-id="@book.Id"
-                                               class="btn btn-lms-outline btn-sm btn-icon">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    rank++;
-                                }
+                            @{
+                                int transactionCounter = 1;
                             }
-                            else
+
+                            @foreach (var item in recentTransactions)
                             {
-                                @* Static placeholders *@
-                                string[] sampleTitles = {
-                                    "Clean Code", "The Pragmatic Programmer",
-                                    "Design Patterns", "Introduction to Algorithms", "You Don't Know JS"
-                                };
-                                for (int i = 0; i < 5; i++)
-                                {
-                                    <tr>
-                                        <td data-label="#">
-                                            <span class="status-badge @(i < 3 ? "badge-reserved" : "badge-returned")">
-                                                #@(i+1)
-                                            </span>
-                                        </td>
-                                        <td data-label="Title"><strong>@sampleTitles[i]</strong></td>
-                                        <td data-label="Author">Author Name</td>
-                                        <td data-label="Genre">Technology</td>
-                                        <td data-label="Status">
-                                            <span class="status-badge badge-available">Available</span>
-                                        </td>
-                                        <td>
-                                            <a asp-controller="Book" asp-action="Index"
-                                               class="btn btn-lms-outline btn-sm btn-icon">
-                                                <i class="bi bi-eye"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                }
+                                var isOverdue = item.Status == "Borrowed" && item.DueDate.Date < DateTime.Now.Date;
+
+                                <tr>
+                                    <td>@transactionCounter</td>
+                                    <td>
+                                        <strong>@(item.Book?.Title ?? "Unknown Book")</strong>
+                                        <div class="text-muted small">@(item.Book?.Author ?? "Unknown Author")</div>
+                                    </td>
+                                    <td>
+                                        <strong>@(item.ApplicationUser?.FullName ?? "Unknown Member")</strong>
+                                        <div class="text-muted small">@(item.ApplicationUser?.Email ?? "")</div>
+                                    </td>
+                                    <td>@item.BorrowDate.ToString("dd MMM yyyy")</td>
+                                    <td>@item.DueDate.ToString("dd MMM yyyy")</td>
+                                    <td>
+                                        @if (item.Status == "Returned")
+                                        {
+                                            <span class="status-badge badge-available">Returned</span>
+                                        }
+                                        else if (isOverdue)
+                                        {
+                                            <span class="status-badge badge-unavailable">Overdue</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge badge-pending">Borrowed</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.FineAmount > 0)
+                                        {
+                                            <strong class="text-danger">@item.FineAmount.ToString("C")</strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No fine</span>
+                                        }
+                                    </td>
+                                </tr>
+
+                                transactionCounter++;
                             }
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-
-        <!-- Recent Returns -->
-        <div class="col-lg-5">
-            <div class="lms-table-wrapper">
-                <div class="lms-table-header">
-                    <h5 class="lms-table-title">
-                        <i class="bi bi-arrow-return-left"></i>Recent Returns
-                    </h5>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-clock-history text-muted" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3">No Recent Transactions</h4>
+                    <p class="text-muted mb-0">Borrowing records will appear here.</p>
                 </div>
-                <table class="lms-table">
-                    <thead>
-                        <tr>
-                            <th>Book</th>
-                            <th>Returned</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (ViewBag.RecentReturns != null)
-                        {
-                            foreach (var tx in ViewBag.RecentReturns)
-                            {
-                                <tr>
-                                    <td data-label="Book">
-                                        <div style="font-weight:600;font-size:.84rem;color:var(--navy);">
-                                            @tx.Book?.Title
-                                        </div>
-                                        <div style="font-size:.72rem;color:var(--grey-500);">
-                                            @tx.ApplicationUser?.UserName
-                                        </div>
-                                    </td>
-                                    <td data-label="Returned" style="font-size:.82rem;">
-                                        @(tx.ReturnDate.HasValue
-                                            ? tx.ReturnDate.Value.ToString("MMM dd")
-                                            : "—")
-                                    </td>
-                                    <td data-label="Status">
-                                        <span class="status-badge badge-returned">Returned</span>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            for (int i = 1; i <= 5; i++)
-                            {
-                                <tr>
-                                    <td data-label="Book">
-                                        <div style="font-weight:600;font-size:.84rem;color:var(--navy);">
-                                            Sample Book @i
-                                        </div>
-                                        <div style="font-size:.72rem;color:var(--grey-500);">
-                                            member@(i)@@example.com
-                                        </div>
-                                    </td>
-                                    <td data-label="Returned" style="font-size:.82rem;">
-                                        @DateTime.Now.AddDays(-i).ToString("MMM dd")
-                                    </td>
-                                    <td data-label="Status">
-                                        <span class="status-badge badge-returned">Returned</span>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
+            }
         </div>
     </div>
 
-    <!-- Print footer -->
-    <div class="text-center mt-3 text-muted" style="font-size:.76rem;">
-        <i class="bi bi-info-circle me-1"></i>
-        Report generated: @DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt")
-        &bull; LibraSystem &bull; Library Management System
+    <div class="lms-card">
+        <div class="lms-card-header">
+            <h3 class="lms-card-title">
+                <i class="bi bi-bookmark-check"></i>
+                Recent Reservations
+            </h3>
+
+            <a asp-controller="Reservation" asp-action="Index" class="btn btn-lms-outline">
+                View All
+            </a>
+        </div>
+
+        <div class="lms-card-body">
+            @if (recentReservations.Any())
+            {
+                <div class="table-responsive">
+                    <table class="lms-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Book</th>
+                                <th>Member</th>
+                                <th>Reservation Date</th>
+                                <th>Status</th>
+                                <th>Book Availability</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{
+                                int reservationCounter = 1;
+                            }
+
+                            @foreach (var item in recentReservations)
+                            {
+                                <tr>
+                                    <td>@reservationCounter</td>
+
+                                    <td>
+                                        <strong>@(item.Book?.Title ?? "Unknown Book")</strong>
+                                        <div class="text-muted small">@(item.Book?.Author ?? "Unknown Author")</div>
+                                    </td>
+
+                                    <td>
+                                        <strong>@(item.ApplicationUser?.FullName ?? "Unknown Member")</strong>
+                                        <div class="text-muted small">@(item.ApplicationUser?.Email ?? "")</div>
+                                    </td>
+
+                                    <td>@item.ReservationDate.ToString("dd MMM yyyy")</td>
+
+                                    <td>
+                                        @if (item.Status == "Approved")
+                                        {
+                                            <span class="status-badge badge-available">Approved</span>
+                                        }
+                                        else if (item.Status == "Cancelled")
+                                        {
+                                            <span class="status-badge badge-unavailable">Cancelled</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge badge-pending">Pending</span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.Book?.IsAvailable == true)
+                                        {
+                                            <span class="status-badge badge-available">Available</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge badge-unavailable">Unavailable</span>
+                                        }
+                                    </td>
+                                </tr>
+
+                                reservationCounter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-bookmark-x text-muted" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3">No Recent Reservations</h4>
+                    <p class="text-muted mb-0">Reservation records will appear here.</p>
+                </div>
+            }
+        </div>
     </div>
 
 </div>
+
+<style>
+    .report-kpi-card {
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+    }
+
+        .report-kpi-card h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1f2d2a;
+        }
+
+        .report-kpi-card p {
+            margin: 0;
+            color: #6c7a74;
+            font-weight: 600;
+        }
+
+    .stat-icon-box {
+        width: 62px;
+        height: 62px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.7rem;
+        flex-shrink: 0;
+    }
+
+    .bg-success-soft {
+        background: #eaf5ef;
+        color: #2e7d5e;
+    }
+
+    .bg-primary-soft {
+        background: #eef4ff;
+        color: #1d4ed8;
+    }
+
+    .bg-danger-soft {
+        background: #fdecec;
+        color: #c0392b;
+    }
+
+    .bg-warning-soft {
+        background: #fff7e6;
+        color: #b7791f;
+    }
+</style>

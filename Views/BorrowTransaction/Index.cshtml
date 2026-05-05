@@ -1,0 +1,264 @@
+﻿@model List<LibraryManagementSystem.Models.BorrowTransaction>
+
+@{
+    ViewData["Title"] = "Borrow Transactions";
+
+    var totalTransactions = Model.Count;
+    var activeLoans = Model.Count(x => x.Status == "Borrowed");
+    var returnedBooks = Model.Count(x => x.Status == "Returned");
+    var overdueBooks = Model.Count(x => x.Status == "Borrowed" && x.DueDate.Date < DateTime.Now.Date);
+    var totalFine = Model.Sum(x => x.FineAmount);
+}
+
+<div class="dashboard-wrap">
+
+    <div class="dashboard-welcome">
+        <h2>Borrow Transactions</h2>
+        <p>Manage issued books, returns, due dates, and late fines.</p>
+        <div class="welcome-date">
+            <i class="bi bi-calendar-event me-1"></i>
+            @DateTime.Now.ToString("dddd, MMMM dd, yyyy")
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="lms-card h-100">
+                <div class="lms-card-body d-flex align-items-center gap-3">
+                    <div class="stat-icon-box bg-light">
+                        <i class="bi bi-arrow-left-right"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1 fw-bold">@totalTransactions</h3>
+                        <p class="text-muted mb-0">Total Transactions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="lms-card h-100">
+                <div class="lms-card-body d-flex align-items-center gap-3">
+                    <div class="stat-icon-box bg-success-soft">
+                        <i class="bi bi-book"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1 fw-bold">@activeLoans</h3>
+                        <p class="text-muted mb-0">Active Loans</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="lms-card h-100">
+                <div class="lms-card-body d-flex align-items-center gap-3">
+                    <div class="stat-icon-box bg-primary-soft">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1 fw-bold">@returnedBooks</h3>
+                        <p class="text-muted mb-0">Returned Books</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="lms-card h-100">
+                <div class="lms-card-body d-flex align-items-center gap-3">
+                    <div class="stat-icon-box bg-danger-soft">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <h3 class="mb-1 fw-bold">@overdueBooks</h3>
+                        <p class="text-muted mb-0">Overdue Books</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="lms-card">
+        <div class="lms-card-header">
+            <h3 class="lms-card-title">
+                <i class="bi bi-clock-history"></i>
+                Transaction Records
+            </h3>
+
+            <a asp-controller="Book" asp-action="Index" class="btn btn-lms-primary">
+                <i class="bi bi-book me-1"></i>
+                View Books
+            </a>
+        </div>
+
+        <div class="lms-card-body">
+
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="lms-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Book</th>
+                                <th>Member</th>
+                                <th>Borrow Date</th>
+                                <th>Due Date</th>
+                                <th>Return Date</th>
+                                <th>Status</th>
+                                <th>Fine</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @{
+                                int counter = 1;
+                            }
+
+                            @foreach (var item in Model)
+                            {
+                                var isOverdue = item.Status == "Borrowed" && item.DueDate.Date < DateTime.Now.Date;
+
+                                <tr>
+                                    <td data-label="#">@counter</td>
+
+                                    <td data-label="Book">
+                                        <strong>@item.Book?.Title</strong>
+                                        <div class="text-muted small">
+                                            @(item.Book?.Author ?? "Unknown Author")
+                                        </div>
+                                    </td>
+
+                                    <td data-label="Member">
+                                        <strong>@(item.ApplicationUser?.FullName ?? "Unknown Member")</strong>
+                                        <div class="text-muted small">
+                                            @(item.ApplicationUser?.Email ?? "")
+                                        </div>
+                                    </td>
+
+                                    <td data-label="Borrow Date">
+                                        @item.BorrowDate.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td data-label="Due Date">
+                                        @item.DueDate.ToString("dd MMM yyyy")
+                                    </td>
+
+                                    <td data-label="Return Date">
+                                        @if (item.ReturnDate.HasValue)
+                                        {
+                                            @item.ReturnDate.Value.ToString("dd MMM yyyy")
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Not returned</span>
+                                        }
+                                    </td>
+
+                                    <td data-label="Status">
+                                        @if (item.Status == "Returned")
+                                        {
+                                            <span class="status-badge badge-available">
+                                                Returned
+                                            </span>
+                                        }
+                                        else if (isOverdue)
+                                        {
+                                            <span class="status-badge badge-unavailable">
+                                                Overdue
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge badge-pending">
+                                                Borrowed
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td data-label="Fine">
+                                        @if (item.FineAmount > 0)
+                                        {
+                                            <strong class="text-danger">
+                                                @item.FineAmount.ToString("C")
+                                            </strong>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">No fine</span>
+                                        }
+                                    </td>
+
+                                    <td data-label="Action">
+                                        @if (item.Status == "Borrowed")
+                                        {
+                                            <form asp-controller="BorrowTransaction"
+                                                  asp-action="ReturnBook"
+                                                  method="post"
+                                                  onsubmit="return confirm('Are you sure you want to return this book?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.Id" />
+
+                                                <button type="submit" class="btn btn-sm btn-lms-primary">
+                                                    <i class="bi bi-arrow-return-left me-1"></i>
+                                                    Return
+                                                </button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Completed</span>
+                                        }
+                                    </td>
+                                </tr>
+
+                                counter++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3 text-end">
+                    <strong>Total Fine Collected / Pending:</strong>
+                    <span class="text-danger fw-bold">
+                        @totalFine.ToString("C")
+                    </span>
+                </div>
+            }
+            else
+            {
+                <div class="empty-state text-center py-5">
+                    <i class="bi bi-clock-history text-muted" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3">No Transactions Found</h4>
+                    <p class="text-muted">
+                        No book borrowing transaction has been created yet.
+                    </p>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>
