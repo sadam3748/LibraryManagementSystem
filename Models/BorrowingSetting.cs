@@ -8,8 +8,8 @@ namespace LibraryManagementSystem.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name = "Loan Duration Days")]
-        [Range(1, 60, ErrorMessage = "Loan duration must be between 1 and 60 days")]
+        [Display(Name = "Borrowed Duration Days")]
+        [Range(1, 60, ErrorMessage = "Borrowed duration must be between 1 and 60 days")]
         public int LoanDurationDays { get; set; } = 14;
 
         [Required]
