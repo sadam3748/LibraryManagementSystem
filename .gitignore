@@ -1,9 +1,16 @@
-bin/ 
-obj/ 
-.vs/ 
-*.user 
-*.suo 
-*.log 
-appsettings.Development.json 
-appsettings.Production.json 
-.env 
+# Build folders
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Logs
+*.log
+
+# Environment / local settings
+appsettings.Development.json
+appsettings.Production.json
+.env
