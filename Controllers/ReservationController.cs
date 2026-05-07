@@ -50,12 +50,13 @@ namespace LibraryManagementSystem.Controllers
             }
 
             var reservations = await _context.Reservations
-                .AsNoTracking()
-                .Include(r => r.Book)
-                .Where(r => r.ApplicationUserId == user.Id)
-                .AsSplitQuery()
-                .OrderByDescending(r => r.ReservationDate)
-                .ToListAsync();
+     .AsNoTracking()
+     .Include(r => r.Book)
+     .Include(r => r.ApplicationUser)
+     .Where(r => r.ApplicationUserId == user.Id)
+     .AsSplitQuery()
+     .OrderByDescending(r => r.ReservationDate)
+     .ToListAsync();
 
             return View(reservations);
         }
