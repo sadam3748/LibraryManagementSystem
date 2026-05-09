@@ -31,27 +31,8 @@ namespace LibraryManagementSystem.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var borrowings = await _context.BorrowTransactions
-                .Include(t => t.Book)
-                .Where(t => t.ApplicationUserId == user.Id)
-                .OrderByDescending(t => t.BorrowDate)
-                .ToListAsync();
+         
 
-            var pendingReservations = await _context.Reservations
-    .AsNoTracking()
-    .CountAsync(r =>
-        r.ApplicationUserId == user.Id &&
-        r.Status == "Pending");
-
-            ViewBag.PendingReservations = pendingReservations;
-
-            ViewBag.TotalBorrowed = borrowings.Count;
-            ViewBag.CurrentlyBorrowed = borrowings.Count(t => t.Status == "Borrowed");
-            ViewBag.Overdue = borrowings.Count(t =>
-                t.Status == "Borrowed" &&
-                t.DueDate.Date < DateTime.Now.Date);
-
-            ViewBag.RecentBorrowings = borrowings.Take(5).ToList();
 
             return View();
         }

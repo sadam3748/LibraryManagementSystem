@@ -24,8 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Member\" />
-    <Folder Include="Views\Book\" />
-    <Folder Include="Views\Reports\" />
   </ItemGroup>
 
 </Project>

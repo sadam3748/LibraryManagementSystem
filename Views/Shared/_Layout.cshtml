@@ -64,12 +64,7 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Book" asp-action="Index">
-                                <i class="bi bi-journals me-1"></i>
-                                Browse Books
-                            </a>
-                        </li>
+                      
                     }
 
                     @* ADMIN MENU *@
@@ -82,51 +77,15 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Book" asp-action="Index">
-                                <i class="bi bi-book me-1"></i>
-                                Books
-                            </a>
-                        </li>
+                       
 
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Admin" asp-action="Members">
-                                <i class="bi bi-people me-1"></i>
-                                Members
-                            </a>
-                        </li>
-                        @*
-                 Hide this Menu for week 1
-                *@
+                     
+               
+
+                     
+
+
                       
-
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="BorrowTransaction" asp-action="Index">
-                                <i class="bi bi-arrow-left-right me-1"></i>
-                                Transactions
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Reservation" asp-action="Index">
-                                <i class="bi bi-bookmark-check me-1"></i>
-                                Reservations
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="BorrowingSetting" asp-action="Index">
-                                <i class="bi bi-gear-fill me-1"></i>
-                                Settings
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Reports" asp-action="Index">
-                                <i class="bi bi-bar-chart me-1"></i>
-                                Reports
-                            </a>
-                        </li>
 
             
                     }
@@ -141,30 +100,12 @@
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Book" asp-action="Index">
-                                <i class="bi bi-search me-1"></i>
-                                Browse Books
-                            </a>
-                        </li>
-                @*
-                 Hide this Menu for week 1
-                *@
+            
                        
 
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="BorrowTransaction" asp-action="MyBorrowings">
-                                <i class="bi bi-clock-history me-1"></i>
-                                My Borrowings
-                            </a>
-                        </li>
+                     
 
-                        <li class="nav-item">
-                            <a class="nav-link lms-nav-link" asp-controller="Reservation" asp-action="MyReservations">
-                                <i class="bi bi-bookmark-check me-1"></i>
-                                My Reservations
-                            </a>
-                        </li>
+                   
 
                        
                     }
@@ -205,12 +146,7 @@
                             </a>
 
                             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown">
-                                <li>
-                                    <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
-                                        <i class="bi bi-person me-2"></i>
-                                        My Profile
-                                    </a>
-                                </li>
+                          
 
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -221,12 +157,7 @@
                                         </a>
                                     </li>
 
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Admin" asp-action="CreateMember">
-                                            <i class="bi bi-person-plus me-2"></i>
-                                            Create Member
-                                        </a>
-                                    </li>
+                                   
                                 }
 
                                 @if (User.IsInRole("Member"))
@@ -237,25 +168,8 @@
                                             Dashboard
                                         </a>
                                     </li>
-                                @*
-                 Hide this Menu for week 1
-                *@
-                        <div style="display:none;">
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="BorrowTransaction" asp-action="MyBorrowings">
-                                            <i class="bi bi-clock-history me-2"></i>
-                                            My Borrowings
-                                        </a>
-                                    </li>
+             
 
-                                    <li>
-                                        <a class="dropdown-item" asp-controller="Reservation" asp-action="MyReservations">
-                                            <i class="bi bi-bookmark-check me-2"></i>
-                                            My Reservations
-                                        </a>
-                                    </li>
-
-                                    </div>
                                 }
 
                                 <li>

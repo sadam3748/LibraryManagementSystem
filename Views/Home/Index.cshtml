@@ -32,9 +32,7 @@
                 <div class="d-flex flex-wrap gap-3">
                     @if (User.Identity!.IsAuthenticated)
                     {
-                        <a asp-controller="Book" asp-action="Index" class="btn btn-lms-gold px-4">
-                            <i class="bi bi-search me-1"></i>Browse Books
-                        </a>
+                       
                     }
                     else
                     {
@@ -76,7 +74,7 @@
                 <div class="group-section">
                     <div class="group-header">
                         <h3><i class="bi bi-people-fill me-2"></i>Project Team</h3>
-                        <p>Library Management System &mdash; Database &amp; Application Development</p>
+                        <p>Library Management System &mdash; Week 1 Basic Setup</p>
                     </div>
                     <div class="table-responsive">
                         <table class="lms-table mb-0">
@@ -98,7 +96,9 @@
                                     <td data-label="Student ID">
                                         <span class="status-badge badge-available">STUDENT-ID-001</span>
                                     </td>
-                                    <td data-label="Role">Member A — Project Setup, Database, Models, ERD, and Backend Structure</td>
+                                    <td data-label="Role">
+                                        Member A — Project setup, ASP.NET Core structure, database connection, and basic application configuration
+                                    </td>
                                 </tr>
 
                                 <tr>
@@ -110,7 +110,9 @@
                                     <td data-label="Student ID">
                                         <span class="status-badge badge-available">STUDENT-ID-002</span>
                                     </td>
-                                    <td data-label="Role">Member B — Admin/Librarian Module, Book Management, Members, Returns, and Fines</td>
+                                    <td data-label="Role">
+                                        Member B — Home page design, navigation layout, project introduction section, and basic UI styling
+                                    </td>
                                 </tr>
 
                                 <tr>
@@ -122,7 +124,9 @@
                                     <td data-label="Student ID">
                                         <span class="status-badge badge-available">STUDENT-ID-003</span>
                                     </td>
-                                    <td data-label="Role">Member C — Member/Reader Module, Browse Books, Borrow, Reserve, Renew, and History</td>
+                                    <td data-label="Role">
+                                        Member C — Login and registration pages, user input forms, validation, and account flow testing
+                                    </td>
                                 </tr>
 
                                 <tr>
@@ -134,7 +138,9 @@
                                     <td data-label="Student ID">
                                         <span class="status-badge badge-available">STUDENT-ID-004</span>
                                     </td>
-                                    <td data-label="Role">Member D — Login, Role-Based Access, Reports, UI Design, Testing, and Final Integration</td>
+                                    <td data-label="Role">
+                                        Member D — Role-based login flow, empty admin dashboard, empty member dashboard, testing, and final integration
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -266,10 +272,7 @@
                             </div>
 
                             <div class="book-card-footer">
-                                <a asp-controller="Book" asp-action="Index"
-                                   class="btn btn-lms-outline btn-sm flex-fill justify-content-center">
-                                    <i class="bi bi-eye me-1"></i>Browse
-                                </a>
+                              
                             </div>
                         </div>
                     </div>
@@ -279,83 +282,7 @@
     </div>
 </section>
 
-<!-- ========== POPULAR BOOKS TABLE ========== -->
-<section class="content-section-alt">
-    <div class="container">
-        <div class="section-row">
-            <h2 class="section-title">Most Borrowed</h2>
-            <a asp-controller="Book" asp-action="Index" class="section-link">
-                View All <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
 
-        <div class="lms-table-wrapper">
-            <div class="table-responsive">
-                <table class="lms-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Title</th>
-                            <th>Author</th>
-                            <th>Genre</th>
-                            <th>Status</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (ViewBag.PopularBooks != null)
-                        {
-                            int rank = 1;
-                            foreach (var book in ViewBag.PopularBooks)
-                            {
-                                <tr>
-                                    <td data-label="#">
-                                        <span class="status-badge @(rank <= 3 ? "badge-reserved" : "badge-returned")">#@rank</span>
-                                    </td>
-                                    <td data-label="Title"><strong>@book.Title</strong></td>
-                                    <td data-label="Author">@book.Author</td>
-                                    <td data-label="Genre">@book.Genre</td>
-                                    <td data-label="Status">
-                                        <span class="status-badge @(book.IsAvailable ? "badge-available" : "badge-borrowed")">
-                                            @(book.IsAvailable ? "Available" : "Borrowed")
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id"
-                                           class="btn btn-lms-outline btn-sm btn-icon">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                rank++;
-                            }
-                        }
-                        else
-                        {
-                            string[] pt = { "Clean Code", "The Pragmatic Programmer", "Design Patterns", "Introduction to Algorithms", "You Don't Know JS" };
-                            string[] pa = { "Robert C. Martin", "David Thomas", "Gang of Four", "Cormen et al.", "Kyle Simpson" };
-                            for (int i = 0; i < 5; i++)
-                            {
-                                <tr>
-                                    <td data-label="#"><span class="status-badge @(i < 3 ? "badge-reserved" : "badge-returned")">#@(i+1)</span></td>
-                                    <td data-label="Title"><strong>@pt[i]</strong></td>
-                                    <td data-label="Author">@pa[i]</td>
-                                    <td data-label="Genre">Technology</td>
-                                    <td data-label="Status"><span class="status-badge badge-available">Available</span></td>
-                                    <td>
-                                        <a asp-controller="Book" asp-action="Index" class="btn btn-lms-outline btn-sm btn-icon">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- ========== CTA (guests only) ========== -->
 @if (!User.Identity!.IsAuthenticated)
